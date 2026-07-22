@@ -12,7 +12,7 @@
 
 <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="gate-active">
 
 <!-- ============ ICON SPRITE ============ -->
 <svg style="display:none">
@@ -52,18 +52,42 @@
   <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M4 12l5 5L20 6"/>
   </symbol>
-  <symbol id="icon-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 20V4l8 8 8-8v16"/>
-  </symbol>
 </svg>
 
 <div class="grain" aria-hidden="true"></div>
+
+<!-- ============ INTAKE GATE ============ -->
+<div class="gate" id="gate">
+  <div class="gate-glow" aria-hidden="true"></div>
+  <form class="gate-card card-glass" id="gateForm" novalidate>
+    <span class="eyebrow">Private client portal</span>
+    <h2>Let's get you in</h2>
+    <p class="gate-sub">Tell us who's joining so your portal is set up correctly.</p>
+
+    <div class="gate-row">
+      <div class="gate-field">
+        <label for="gateFirstName">First name</label>
+        <input type="text" id="gateFirstName" name="firstName" autocomplete="given-name" required />
+      </div>
+      <div class="gate-field">
+        <label for="gateLastName">Last name</label>
+        <input type="text" id="gateLastName" name="lastName" autocomplete="family-name" required />
+      </div>
+    </div>
+    <div class="gate-field">
+      <label for="gateEmail">Email</label>
+      <input type="email" id="gateEmail" name="email" autocomplete="email" required />
+    </div>
+
+    <button type="submit" class="gate-submit">Enter portal <span aria-hidden="true">&rarr;</span></button>
+    <p class="gate-note">This just personalizes your portal &mdash; no password needed.</p>
+  </form>
+</div>
 
 <!-- ============ NAV ============ -->
 <header class="nav">
   <div class="nav-inner">
     <div class="brand">
-      <span class="brand-mark"><svg viewBox="0 0 24 24"><use href="#icon-mark"/></svg></span>
       <span class="brand-word">Luminary<span class="brand-word-light">Digital&nbsp;Group</span></span>
     </div>
     <nav class="nav-links">
@@ -74,7 +98,7 @@
     <div class="client-chip">
       <span class="dot"></span>
       <span id="navClientCompany">Kairos Kreations</span>
-      <span class="client-chip-sub">Private Portal</span>
+      <span class="client-chip-sub js-visitor-name">Private Portal</span>
     </div>
   </div>
 </header>
@@ -86,7 +110,7 @@
     <div class="hero-glow" aria-hidden="true"></div>
     <div class="hero-inner">
       <span class="eyebrow">Private client portal</span>
-      <h1>Welcome, <span id="clientName" class="accent-text">Gabriel</span>.</h1>
+      <h1>Welcome, <span class="js-first-name accent-text">there</span>.</h1>
       <p class="hero-sub">
         This is where <strong id="clientCompanyA">Kairos Kreations</strong> and
         <strong>Luminary Digital Group</strong> track a single 90&#8209;day campaign,
@@ -261,12 +285,12 @@
   <!-- ============ THANK YOU ============ -->
   <section class="section">
     <div class="card-glass thanks-card reveal">
-      <span class="section-eyebrow">From the whole team</span>
-      <h2>Thank you for trusting us with this, Gabriel.</h2>
+      <span class="section-eyebrow">From the whole team @Luminary</span>
+      <h2>Thank you for trusting us with this, <span class="js-first-name">there</span>.</h2>
       <p>
         Kairos Kreations took a chance on a 90&#8209;day plan instead of a vague retainer.
-        We built this portal so that chance never feels like a black box &mdash; you'll see
-        exactly what we're doing and why, every step of the way.
+        We have this portal specially for you so that chance never feels like a black box
+        &mdash; you'll see exactly what we're doing and why, every step of the way.
       </p>
     </div>
   </section>
