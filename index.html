@@ -3,6 +3,17 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+  // Runs immediately, before the page paints, so a returning visitor
+  // (already saved in localStorage) never sees the gate flash on screen.
+  (function(){
+    try{
+      if (localStorage.getItem("luminaryPortalVisitor")){
+        document.documentElement.classList.add("skip-gate");
+      }
+    } catch(e){}
+  })();
+</script>
 <title>Kairos Kreations · Luminary Digital Group</title>
 <meta name="description" content="Private campaign portal for Kairos Kreations, powered by Luminary Digital Group." />
 
