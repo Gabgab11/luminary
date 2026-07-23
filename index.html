@@ -3,332 +3,329 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<script>
-  // Runs immediately, before the page paints, so a returning visitor
-  // (already saved in localStorage) never sees the gate flash on screen.
-  // Scoped per client slug, matching the key script.js uses later.
-  // If there's no ?client= at all, this is the shared landing page —
-  // skip the check entirely so it doesn't hide the landing chooser.
-  (function(){
-    try{
-      var params = new URLSearchParams(window.location.search);
-      var slug = params.get("client");
-      if (slug && localStorage.getItem("luminaryPortalVisitor:" + slug)){
-        document.documentElement.classList.add("skip-gate");
-      }
-    } catch(e){}
-  })();
-</script>
-<title>Client Portal · Luminary Digital Group</title>
-<meta name="description" content="Private client portal, powered by Luminary Digital Group." />
+<title>Luminary Digital Group — Web Design, Apps & Growth for Culture-First Brands</title>
+<meta name="description" content="Luminary Digital Group builds digital homes for brands with real culture behind them — websites, mobile apps, SEO, Google Ads & cybersecurity for hospitality, heritage, and lifestyle brands." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
+
+<style>
+  /* Homepage-only styles */
+  .hero{ padding: 76px 28px 40px; text-align: center; }
+  .hero-inner{ max-width: 800px; margin: 0 auto; }
+  .hero h1{ font-size: clamp(38px, 6.4vw, 68px); margin: 20px 0 22px; }
+  .hero-sub{ font-size: 18px; max-width: 600px; margin: 0 auto; }
+  .hero-cta{ margin-top: 36px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .stat-strip{
+    max-width: var(--maxw); margin: 60px auto 0; padding: 0 28px 90px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .stat{ text-align: center; padding-bottom: 40px; }
+  .stat-num{ font-family: var(--font-display); font-size: clamp(34px, 5vw, 50px); font-weight: 700; }
+  .stat-label{ font-size: 13.5px; color: var(--ink-soft); margin-top: 6px; }
+  @media (max-width: 640px){ .stat-strip{ grid-template-columns: 1fr; } }
+
+  .focus-line{
+    font-family: var(--font-mono); font-size: 13px; color: var(--ink-faint);
+    text-align: center; padding: 0 28px 90px; letter-spacing: 0.02em;
+  }
+
+  .work-grid{ display: grid; gap: 20px; }
+  .work-card{
+    display: grid; grid-template-columns: 1fr 1.3fr; gap: 0; align-items: stretch;
+    background: var(--card); border-radius: var(--radius-lg); overflow: hidden;
+    border: 1px solid var(--line); transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .work-card:hover{ transform: translateY(-3px); box-shadow: 0 30px 50px -30px rgba(20,17,13,0.2); }
+  .work-visual{
+    position: relative; min-height: 220px;
+    background: linear-gradient(135deg, var(--orange), var(--amber));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .work-visual span{
+    font-family: var(--font-display); font-weight: 700; font-size: 15px; color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  .work-body{ padding: 34px 36px; display: flex; flex-direction: column; gap: 12px; }
+  .work-tag{ font-family: var(--font-mono); font-size: 11.5px; color: var(--orange); text-transform: uppercase; letter-spacing: 0.06em; }
+  .work-body h3{ font-size: 22px; }
+  .work-body p{ font-size: 14.5px; }
+  .work-link{ margin-top: 6px; font-size: 13.5px; font-weight: 600; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; }
+  .work-link:hover{ color: var(--orange); }
+  @media (max-width: 760px){ .work-card{ grid-template-columns: 1fr; } .work-visual{ min-height: 140px; } }
+
+  .services-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 900px){ .services-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px){ .services-grid{ grid-template-columns: 1fr; } }
+  .service-card{
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-md);
+    padding: 30px 26px; transition: border-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .service-card:hover{ border-color: var(--orange); transform: translateY(-3px); }
+  .service-index{ font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+  .service-card h3{ font-size: 18px; margin: 14px 0 8px; }
+  .service-card p{ font-size: 13.5px; }
+
+  .blog-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 860px){ .blog-grid{ grid-template-columns: 1fr; } }
+  .blog-card{
+    background: var(--paper-warm); border: 1px solid var(--line); border-radius: var(--radius-md);
+    padding: 26px 24px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .3s var(--ease);
+  }
+  .blog-card:hover{ border-color: var(--orange); }
+  .blog-meta{ font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); }
+  .blog-card h3{ font-size: 17px; }
+  .blog-card p{ font-size: 13.5px; }
+  .blog-read{ font-size: 13px; font-weight: 600; margin-top: auto; }
+  .blog-read:hover{ color: var(--orange); }
+
+  .contact-wrap{ display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 60px; }
+  @media (max-width: 860px){ .contact-wrap{ grid-template-columns: 1fr; gap: 40px; } }
+  .contact-form{ display: grid; gap: 14px; }
+  .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px){ .form-row{ grid-template-columns: 1fr; } }
+  .contact-form label{ font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); display: block; margin-bottom: 6px; }
+  .contact-form input, .contact-form select, .contact-form textarea{
+    width: 100%; border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    padding: 13px 15px; font-family: var(--font-body); font-size: 14.5px; color: var(--ink);
+    background: var(--paper);
+  }
+  .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus{
+    outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,106,43,0.1);
+  }
+  .contact-note{ font-size: 12.5px; color: var(--ink-faint); margin-top: 4px; }
+  .form-status{ font-size: 13.5px; margin-top: 10px; display: none; }
+  .form-status.is-visible{ display: block; }
+</style>
 </head>
-<body class="gate-active">
+<body>
 
-<!-- ============ ICON SPRITE ============ -->
-<svg style="display:none">
-  <symbol id="icon-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
-    <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 19 3a12.88 12.88 0 0 1-2.02 8A22 22 0 0 1 12 15z"/>
-    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
-    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
-  </symbol>
-  <symbol id="icon-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M3 17l6-6 4 4 8-8"/>
-    <path d="M17 6h4v4"/>
-  </symbol>
-  <symbol id="icon-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 20V10M12 20V4M20 20v-7"/>
-    <path d="M2 20h20"/>
-  </symbol>
-  <symbol id="icon-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-    <path d="M14 2v6h6M9 13h6M9 17h6"/>
-  </symbol>
-  <symbol id="icon-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/>
-  </symbol>
-  <symbol id="icon-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M9 18h6M10 22h4"/>
-    <path d="M12 2a7 7 0 0 0-4 12.74c.6.44.94 1.15.94 1.9V17h6.12v-.36c0-.75.34-1.46.94-1.9A7 7 0 0 0 12 2z"/>
-  </symbol>
-  <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 3v12m0 0l-4-4m4 4l4-4"/>
-    <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
-  </symbol>
-  <symbol id="icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="4.5" y="11" width="15" height="9" rx="2"/>
-    <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
-  </symbol>
-  <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 12l5 5L20 6"/>
-  </symbol>
-</svg>
-
-<div class="grain" aria-hidden="true"></div>
-
-<!-- ============ INTAKE GATE ============ -->
-<div class="gate" id="gate">
-  <div class="gate-glow" aria-hidden="true"></div>
-
-  <div class="gate-card card-glass" id="gateLoading">
-    <span class="eyebrow">Private client portal</span>
-    <h2>Loading your portal&hellip;</h2>
-    <p class="gate-sub">One second while we pull up your details.</p>
-  </div>
-
-  <div class="gate-card card-glass" id="gateLanding" style="display:none;">
-    <span class="eyebrow">Luminary Digital Group</span>
-    <h2>Welcome</h2>
-    <p class="gate-sub">Choose where you're headed.</p>
-    <a href="admin.html" class="gate-submit">Admin sign in <span aria-hidden="true">&rarr;</span></a>
-    <p class="gate-note">Here as a client? Open the private link you were sent &mdash; this page is just the front door.</p>
-  </div>
-
-  <div class="gate-card card-glass" id="gateNotFound" style="display:none;">
-    <span class="eyebrow">Private client portal</span>
-    <h2>We couldn't find this portal</h2>
-    <p class="gate-sub">This link doesn't match an active client. Double-check the URL, or reach out to Luminary Digital Group for the correct link.</p>
-  </div>
-
-  <form class="gate-card card-glass" id="gateForm" novalidate style="display:none;">
-    <span class="eyebrow">Private client portal</span>
-    <h2>Let's get you in</h2>
-    <p class="gate-sub">Tell us who's joining so your portal is set up correctly.</p>
-
-    <div class="gate-row">
-      <div class="gate-field">
-        <label for="gateFirstName">First name</label>
-        <input type="text" id="gateFirstName" name="firstName" autocomplete="given-name" required />
-      </div>
-      <div class="gate-field">
-        <label for="gateLastName">Last name</label>
-        <input type="text" id="gateLastName" name="lastName" autocomplete="family-name" required />
-      </div>
-    </div>
-    <div class="gate-field">
-      <label for="gateEmail">Email</label>
-      <input type="email" id="gateEmail" name="email" autocomplete="email" required />
-    </div>
-
-    <button type="submit" class="gate-submit">Enter portal <span aria-hidden="true">&rarr;</span></button>
-    <p class="gate-note">This just personalizes your portal &mdash; no password needed.</p>
-  </form>
-</div>
-
-<!-- ============ NAV ============ -->
 <header class="nav">
   <div class="nav-inner">
-    <div class="brand">
-      <span class="brand-word">Luminary<span class="brand-word-light">Digital&nbsp;Group</span></span>
-    </div>
+    <a href="index.html" class="brand-word">Luminary<span class="brand-word-light">Digital&nbsp;Group</span></a>
     <nav class="nav-links">
-      <a href="#progress">Overview</a>
-      <a href="#roadmap">Roadmap</a>
-      <a href="#reports">Reports</a>
+      <a href="index.html#work">Work</a>
+      <a href="about.html">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="certifications.html">Certifications</a>
+      <a href="index.html#thoughts">Thoughts</a>
     </nav>
-    <div class="client-chip">
-      <span class="dot"></span>
-      <span id="navClientCompany" class="js-company-name">Kairos Kreations</span>
-      <span class="client-chip-sub js-visitor-name">Private Portal</span>
-    </div>
+    <a href="#contact" class="nav-cta">Start a project</a>
   </div>
 </header>
 
 <main>
 
   <!-- ============ HERO ============ -->
-  <section class="hero" id="top">
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="hero-inner">
-      <span class="eyebrow">Private client portal</span>
-      <h1>Welcome, <span class="js-first-name accent-text">there</span>.</h1>
+  <section class="hero">
+    <div class="hero-inner reveal">
+      <span class="section-eyebrow" style="justify-content:center;">Web design &amp; digital branding</span>
+      <h1>We build digital homes for brands with <span class="accent-text">real culture</span> behind them.</h1>
       <p class="hero-sub">
-        This is where <strong id="clientCompanyA" class="js-company-name">Kairos Kreations</strong> and
-        <strong>Luminary Digital Group</strong> track a single 90&#8209;day campaign,
-        month by month, decision by decision.
+        Restaurants, heritage tourism, hospitality — the kind of brands whose story is
+        bold enough to carry the design, not the other way around. Luminary Digital Group
+        turns that story into a website, an app, and a growth engine.
       </p>
-
-      <div class="hero-meta">
-        <div class="meta-chip">
-          <span class="meta-label">Launch date</span>
-          <span class="meta-value" id="launchDateChip">August 1, 2026</span>
-        </div>
-        <div class="meta-chip">
-          <span class="meta-label">Engagement</span>
-          <span class="meta-value">90 days</span>
-        </div>
-        <div class="meta-chip">
-          <span class="meta-label">Cadence</span>
-          <span class="meta-value">Monthly reporting</span>
-        </div>
+      <div class="hero-cta">
+        <a href="#work" class="btn btn-primary">See the work</a>
+        <a href="#contact" class="btn btn-outline">Start a project</a>
       </div>
     </div>
   </section>
 
-  <!-- ============ MISSION CONTROL / LIVE PROGRESS ============ -->
-  <section class="section" id="progress">
-    <div class="card-glass mission-control reveal">
-      <div class="mc-head">
+  <div class="stat-strip reveal">
+    <div class="stat">
+      <div class="stat-num">4+</div>
+      <div class="stat-label">Years building</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">46+</div>
+      <div class="stat-label">Projects delivered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Clients worldwide</div>
+    </div>
+  </div>
+
+  <p class="focus-line reveal">Dynamic animation · Motion design · Framer · Figma · WordPress · Wix</p>
+
+  <!-- ============ WORK ============ -->
+  <section class="section" id="work">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Recent projects</span>
+      <h2>Culture-first brands, built to travel</h2>
+      <p class="section-lede">A handful of the brands we've built digital homes for.</p>
+    </div>
+
+    <div class="work-grid">
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Enish Global</span></div>
+        <div class="work-body">
+          <span class="work-tag">01 · Hospitality</span>
+          <h3>Enish Global</h3>
+          <p>An updated site for the Nigerian-led restaurant group, built to carry the confidence of African flavour into a global, mobile-first experience.</p>
+          <a href="https://enishglobal.com/" target="_blank" rel="noopener" class="work-link">Visit enishglobal.com ↗</a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Kiza Dubai</span></div>
+        <div class="work-body">
+          <span class="work-tag">02 · Hospitality</span>
+          <h3>Kiza Dubai</h3>
+          <p>A dining experience site showcasing rich African heritage in a Dubai setting, pairing warmth and ceremony with a clean, image-led layout.</p>
+          <a href="https://kiza.ae/" target="_blank" rel="noopener" class="work-link">Visit kiza.ae ↗</a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Nigeria Everywhere</span></div>
+        <div class="work-body">
+          <span class="work-tag">03 · Culture platform</span>
+          <h3>Nigeria Everywhere</h3>
+          <p>A vibrant Afro-urban platform showcasing Nigeria's culture, creativity, and global influence — music, film, fashion, tourism, and innovation — built with bold visuals and a modern stack tuned for performance and SEO.</p>
+          <a href="https://nigeriaeverywhere.com/" target="_blank" rel="noopener" class="work-link">Visit nigeriaeverywhere.com ↗</a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Cardify Africa</span></div>
+        <div class="work-body">
+          <span class="work-tag">04 · Product / Fintech</span>
+          <h3>Cardify Africa</h3>
+          <p>A digital card platform designed for speed and trust, with clean flows for issuing and managing cards, built with the same mobile-first discipline as the rest of the Luminary portfolio.</p>
+          <a href="https://app.cardify.co/" target="_blank" rel="noopener" class="work-link">Visit app.cardify.co ↗</a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Rhays Restaurant</span></div>
+        <div class="work-body">
+          <span class="work-tag">05 · Hospitality</span>
+          <h3>Rhays Restaurant, Texas</h3>
+          <p>A warm, appetite-first site for a Texas restaurant, built to make the menu and the room feel inviting before a guest ever walks in.</p>
+          <a href="https://rhayshtx.com/" target="_blank" rel="noopener" class="work-link">Visit rhayshtx.com ↗</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="section section-alt" id="services">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">What we offer</span>
+      <h2>Everything your brand needs to grow</h2>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="service-index">01</span>
+        <h3>SEO</h3>
+        <p>Search engine optimization to get your brand found.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">02</span>
+        <h3>Google Ads Restructuring</h3>
+        <p>Cleaner campaign structure for better spend &amp; results.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">03</span>
+        <h3>Website Development</h3>
+        <p>Fast, mobile-first sites built to convert.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">04</span>
+        <h3>Mobile App Development</h3>
+        <p>iOS &amp; Android apps built for the African &amp; American market.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">05</span>
+        <h3>Cybersecurity Solutions</h3>
+        <p>Security assessments &amp; protection for your digital assets.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">06</span>
+        <h3>Brand &amp; Content Strategy</h3>
+        <p>Positioning, messaging &amp; content that carries your story.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THOUGHTS / BLOG TEASER ============ -->
+  <section class="section" id="thoughts">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Design thoughts</span>
+      <h2>Notes from the studio</h2>
+    </div>
+
+    <div class="blog-grid">
+      <article class="blog-card reveal">
+        <span class="blog-meta">Mar 8, 2025 · 6 min read</span>
+        <h3>Starting and growing a career in web design</h3>
+        <p>As the internet keeps developing, the jobs tied to it grow too — especially in web design and development.</p>
+        <a href="blog-career.html" class="blog-read">Read the piece ↗</a>
+      </article>
+      <article class="blog-card reveal">
+        <span class="blog-meta">Mar 15, 2023 · 6 min read</span>
+        <h3>Create a landing page that performs great</h3>
+        <p>A good landing page is a standalone tool for generating leads and sales. Here's how to make one earn its keep.</p>
+        <a href="blog-landing-page.html" class="blog-read">Read the piece ↗</a>
+      </article>
+      <article class="blog-card reveal">
+        <span class="blog-meta">Feb 28, 2022 · 6 min read</span>
+        <h3>How can designers prepare for the future?</h3>
+        <p>The tools change fast. What stays constant is understanding people well enough to design for them.</p>
+        <a href="blog-future.html" class="blog-read">Read the piece ↗</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="section section-alt" id="contact">
+    <div class="contact-wrap">
+      <div class="reveal">
+        <span class="section-eyebrow">Let's work together</span>
+        <h2>Have a brand that deserves a real digital home?</h2>
+        <p class="section-lede" style="margin-top:16px;">Tell us about the project — we'll get back to you personally, not with a form-letter.</p>
+      </div>
+
+      <form class="contact-form reveal" id="contactForm">
+        <div class="form-row">
+          <div>
+            <label for="cfName">Name</label>
+            <input type="text" id="cfName" name="name" required />
+          </div>
+          <div>
+            <label for="cfEmail">Email</label>
+            <input type="email" id="cfEmail" name="email" required />
+          </div>
+        </div>
         <div>
-          <span class="section-eyebrow">Mission control</span>
-          <h2>Where things stand right now</h2>
+          <label for="cfProject">Type of project</label>
+          <select id="cfProject" name="project">
+            <option>Website Development</option>
+            <option>Mobile App Development</option>
+            <option>SEO</option>
+            <option>Google Ads Restructuring</option>
+            <option>Cybersecurity Solutions</option>
+            <option>Brand &amp; Content Strategy</option>
+            <option>Something else</option>
+          </select>
         </div>
-        <span class="phase-badge" id="phaseBadge">Pre&#8209;launch</span>
-      </div>
-
-      <p class="mc-status" id="mcStatusText">Calculating campaign status&hellip;</p>
-
-      <div class="progress-track" role="progressbar" aria-label="Campaign progress" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div class="progress-scale">
-        <span>Launch</span>
-        <span>Day 30</span>
-        <span>Day 60</span>
-        <span>Day 90</span>
-      </div>
-
-      <div class="stat-row">
-        <div class="stat">
-          <span class="stat-num" data-count="3">0</span>
-          <span class="stat-label">Months of partnership</span>
+        <div>
+          <label for="cfMessage">Message</label>
+          <textarea id="cfMessage" name="message" rows="4" required></textarea>
         </div>
-        <div class="stat">
-          <span class="stat-num" data-count="90">0</span>
-          <span class="stat-label">Days in this campaign</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" data-count="4">0</span>
-          <span class="stat-label">Deliverables every month</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" data-count="1">0</span>
-          <span class="stat-label">Strategy built for you</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ ROADMAP / TIMELINE ============ -->
-  <section class="section" id="roadmap">
-    <div class="section-head reveal">
-      <span class="section-eyebrow">The plan</span>
-      <h2>Your 90&#8209;day roadmap</h2>
-      <p class="section-lede">Three months, three jobs to do. Nothing overlaps by accident &mdash; each phase builds on the one before it.</p>
-    </div>
-
-    <div class="timeline">
-      <div class="timeline-rail">
-        <div class="timeline-fill" id="timelineFill"></div>
-      </div>
-
-      <article class="timeline-node reveal" data-phase="foundation">
-        <div class="node-marker"><svg viewBox="0 0 24 24"><use href="#icon-rocket"/></svg></div>
-        <div class="node-body">
-          <span class="node-index">Month 01 &middot; Days 1&ndash;30</span>
-          <h3>Foundation &amp; launch</h3>
-          <p>Audience research, creative direction, campaign build, tracking installed, and everything goes live.</p>
-          <ul class="node-list">
-            <li>Audience &amp; competitor research</li>
-            <li>Creative design and ad setup</li>
-            <li>Tracking &amp; analytics installed</li>
-            <li>Campaign launch</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="timeline-node reveal" data-phase="optimization">
-        <div class="node-marker"><svg viewBox="0 0 24 24"><use href="#icon-trend"/></svg></div>
-        <div class="node-body">
-          <span class="node-index">Month 02 &middot; Days 31&ndash;60</span>
-          <h3>Optimization</h3>
-          <p>We let the data talk. Weak audiences get cut, strong ones get fed, and cost per lead comes down.</p>
-          <ul class="node-list">
-            <li>Audience &amp; creative testing</li>
-            <li>Cost efficiency improvements</li>
-            <li>Conversion tracking refinement</li>
-            <li>Qualified lead volume increases</li>
-          </ul>
-        </div>
-      </article>
-
-      <article class="timeline-node reveal" data-phase="scale">
-        <div class="node-marker"><svg viewBox="0 0 24 24"><use href="#icon-scale"/></svg></div>
-        <div class="node-body">
-          <span class="node-index">Month 03 &middot; Days 61&ndash;90</span>
-          <h3>Scale</h3>
-          <p>What's working gets more budget. We lock in the winning formula and hand you a plan for month four and beyond.</p>
-          <ul class="node-list">
-            <li>Scale winning campaigns</li>
-            <li>Maximize return on ad spend</li>
-            <li>Long-term strategy handoff</li>
-          </ul>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ============ WHAT TO EXPECT ============ -->
-  <section class="section" id="expect">
-    <div class="section-head reveal">
-      <span class="section-eyebrow">Every month, without fail</span>
-      <h2>What you'll receive</h2>
-      <p class="section-lede">At the close of every month, four things land in this portal &mdash; no chasing, no guessing.</p>
-    </div>
-
-    <div class="expect-grid">
-      <div class="expect-card reveal">
-        <div class="expect-icon"><svg viewBox="0 0 24 24"><use href="#icon-doc"/></svg></div>
-        <h3>Performance report</h3>
-        <p>The full breakdown &mdash; spend, leads, cost per result, and how the month moved against the last one.</p>
-      </div>
-      <div class="expect-card reveal">
-        <div class="expect-icon"><svg viewBox="0 0 24 24"><use href="#icon-spark"/></svg></div>
-        <h3>Plain-English summary</h3>
-        <p>An AI-assisted summary that translates the numbers into what actually happened and why it matters.</p>
-      </div>
-      <div class="expect-card reveal">
-        <div class="expect-icon"><svg viewBox="0 0 24 24"><use href="#icon-bulb"/></svg></div>
-        <h3>Next-month recommendations</h3>
-        <p>Specific, prioritized moves for the coming month &mdash; not a generic checklist.</p>
-      </div>
-      <div class="expect-card reveal">
-        <div class="expect-icon"><svg viewBox="0 0 24 24"><use href="#icon-download"/></svg></div>
-        <h3>Downloadable documents</h3>
-        <p>Reports and campaign files, kept here so you always have a record to come back to.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ MONTHLY REPORTS ============ -->
-  <section class="section" id="reports">
-    <div class="section-head reveal">
-      <span class="section-eyebrow">Your archive</span>
-      <h2>Monthly reports &amp; downloads</h2>
-      <p class="section-lede">Each report unlocks the moment its month closes. Nothing to request &mdash; it'll simply be here.</p>
-    </div>
-
-    <div class="reports-grid" id="reportsGrid">
-      <!-- populated by script.js from CLIENT config -->
-    </div>
-  </section>
-
-  <!-- ============ THANK YOU ============ -->
-  <section class="section">
-    <div class="card-glass thanks-card reveal">
-      <span class="section-eyebrow">From the whole team @Luminary</span>
-      <h2>Thank you for trusting us with this, <span class="js-first-name">there</span>.</h2>
-      <p>
-        <span class="js-company-name">Your business</span> took a chance on a plan instead of a vague retainer.
-        We have this portal specially for you so that chance never feels like a black box
-        &mdash; you'll see exactly what we're doing and why, every step of the way.
-      </p>
+        <button type="submit" class="btn btn-primary" style="justify-self:start;">Send message</button>
+        <p class="contact-note">Messages are sent straight to our inbox.</p>
+        <p class="form-status" id="formStatus"></p>
+      </form>
     </div>
   </section>
 
@@ -336,15 +333,26 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <span>Luminary Digital Group &middot; built for <span class="js-company-name">your business</span></span>
-    <span class="footer-sep">&middot;</span>
-    <span>This is a private link &mdash; please don't share it outside your team.</span>
-    <span class="footer-sep">&middot;</span>
-    <button type="button" id="logoutBtn" class="footer-logout">Log out</button>
+    <div>
+      <div class="footer-brand">Luminary Digital Group</div>
+      <p>We build digital homes for brands with real culture behind them — websites, apps, and growth, done with care.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Site</div>
+      <a href="index.html#work">Work</a>
+      <a href="about.html">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="certifications.html">Certifications</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Connect</div>
+      <a href="#contact">Start a project</a>
+      <a href="https://www.instagram.com/mr_eyanu/" target="_blank" rel="noopener">Instagram ↗</a>
+    </div>
   </div>
+  <div class="footer-bottom">© Luminary Digital Group. All rights reserved.</div>
 </footer>
 
-<script type="module" src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
-
