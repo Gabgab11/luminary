@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+  (function(){
+    try{
+      if (localStorage.getItem("luminaryTheme") === "dark"){
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    } catch(e){}
+  })();
+</script>
 <title>About — Luminary Digital Group</title>
 <meta name="description" content="Luminary Digital Group is a web design, app development, and growth studio for brands with real culture behind them." />
 
@@ -42,9 +51,9 @@
       <a href="index.html#work">Work</a>
       <a href="about.html">About</a>
       <a href="index.html#services">Services</a>
-      <a href="certifications.html">Certifications</a>
       <a href="index.html#thoughts">Thoughts</a>
     </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
     <a href="index.html#contact" class="nav-cta">Start a project</a>
   </div>
 </header>
@@ -131,7 +140,6 @@
       <a href="index.html#work">Work</a>
       <a href="about.html">About</a>
       <a href="index.html#services">Services</a>
-      <a href="certifications.html">Certifications</a>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Connect</div>
@@ -145,3 +153,4 @@
 <script src="script.js"></script>
 </body>
 </html>
+
