@@ -1,4 +1,4 @@
-import { auth, db, CLIENT_SLUG } from "./firebase-init.js";
+import { auth, db } from "./firebase-init.js";
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -22,6 +22,13 @@ import {
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+const SERVICE_LABEL = {
+  websiteDesign: "Website design",
+  seo: "SEO",
+  mobileApp: "Mobile app development",
+  googleAds: "Google Ads",
+};
+
 /* ------------------------------------------------------------------ */
 /* DOM refs                                                            */
 /* ------------------------------------------------------------------ */
@@ -32,6 +39,21 @@ const loginForm = document.getElementById("loginForm");
 const loginError = document.getElementById("loginError");
 const loginBtn = document.getElementById("loginBtn");
 const logoutBtn = document.getElementById("logoutBtn");
+
+const newClientName = document.getElementById("newClientName");
+const newClientStart = document.getElementById("newClientStart");
+const newClientDuration = document.getElementById("newClientDuration");
+const createClientBtn = document.getElementById("createClientBtn");
+const linkResult = document.getElementById("linkResult");
+const linkOutput = document.getElementById("linkOutput");
+const copyLinkBtn = document.getElementById("copyLinkBtn");
+const openLinkBtn = document.getElementById("openLinkBtn");
+
+const clientList = document.getElementById("clientList");
+const uploadingForLabel = document.getElementById("uploadingForLabel");
+const reportsForLabel = document.getElementById("reportsForLabel");
+const noClientSelected = document.getElementById("noClientSelected");
+const uploadForm = document.getElementById("uploadForm");
 
 const reportMonth = document.getElementById("reportMonth");
 const reportPlatform = document.getElementById("reportPlatform");
@@ -63,19 +85,22 @@ const tags = {
   ctr: document.getElementById("tagCtr"),
 };
 
+newClientStart.value = new Date().toISOString().slice(0, 10);
+
 let currentFile = null;
 let editingReportId = null;
+let selectedClientSlug = null;
+let unsubscribeReports = null;
 
 /* ------------------------------------------------------------------ */
 /* Auth                                                                 */
 /* ------------------------------------------------------------------ */
 
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, (user) => {
   if (user) {
     loginScreen.style.display = "none";
     appEl.classList.add("is-visible");
-    await ensureClientDoc();
-    listenToReports();
+    listenToClients();
   } else {
     loginScreen.style.display = "flex";
     appEl.classList.remove("is-visible");
@@ -104,16 +129,191 @@ loginForm.addEventListener("submit", async (event) => {
 
 logoutBtn.addEventListener("click", () => signOut(auth));
 
-async function ensureClientDoc() {
-  const clientRef = doc(db, "clients", CLIENT_SLUG);
-  const snap = await getDoc(clientRef);
-  if (!snap.exists()) {
-    await setDoc(clientRef, {
-      name: "Kairos Kreations",
-      slug: CLIENT_SLUG,
+/* ------------------------------------------------------------------ */
+/* Create a new client + generate their portal link                    */
+/* ------------------------------------------------------------------ */
+
+function slugify(name) {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "client";
+}
+
+async function uniqueSlug(base) {
+  let slug = base;
+  let n = 2;
+  while (true) {
+    const snap = await getDoc(doc(db, "clients", slug));
+    if (!snap.exists()) return slug;
+    slug = `${base}-${n}`;
+    n++;
+  }
+}
+
+function buildPortalLink(slug) {
+  // Derives the link from wherever admin.html is actually hosted, so it
+  // works on GitHub Pages, Netlify, a custom domain — anywhere.
+  const base = window.location.href.replace(/admin\.html.*$/, "index.html");
+  return `${base}?client=${slug}`;
+}
+
+createClientBtn.addEventListener("click", async () => {
+  const name = newClientName.value.trim();
+  if (!name) {
+    alert("Enter a client or business name first.");
+    return;
+  }
+
+  const startDate = newClientStart.value;
+  const durationMonths = parseInt(newClientDuration.value, 10) || 3;
+  const services = Array.from(
+    document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked')
+  ).map((cb) => cb.value);
+
+  createClientBtn.disabled = true;
+  createClientBtn.textContent = "Creating…";
+
+  try {
+    const slug = await uniqueSlug(slugify(name));
+    await setDoc(doc(db, "clients", slug), {
+      name,
+      slug,
+      launchDate: startDate ? `${startDate}T00:00:00` : null,
+      durationMonths,
+      services,
       createdAt: serverTimestamp(),
     });
+
+    linkOutput.value = buildPortalLink(slug);
+    linkResult.classList.add("is-visible");
+
+    newClientName.value = "";
+    document
+      .querySelectorAll('.checkbox-item input[type="checkbox"]')
+      .forEach((cb) => (cb.checked = false));
+  } catch (err) {
+    alert("Couldn't create that client: " + err.message);
+  } finally {
+    createClientBtn.disabled = false;
+    createClientBtn.textContent = "Create client & generate link";
   }
+});
+
+copyLinkBtn.addEventListener("click", () => {
+  navigator.clipboard.writeText(linkOutput.value).then(() => {
+    copyLinkBtn.textContent = "Copied!";
+    setTimeout(() => (copyLinkBtn.textContent = "Copy"), 1500);
+  });
+});
+
+openLinkBtn.addEventListener("click", () => {
+  window.open(linkOutput.value, "_blank");
+});
+
+/* ------------------------------------------------------------------ */
+/* Client list + selection                                             */
+/* ------------------------------------------------------------------ */
+
+function formatDateShort(iso) {
+  try {
+    return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  } catch (e) {
+    return iso;
+  }
+}
+
+function listenToClients() {
+  const clientsRef = collection(db, "clients");
+  onSnapshot(clientsRef, (snapshot) => {
+    if (snapshot.empty) {
+      clientList.innerHTML = '<p class="empty-note">No clients yet — create your first one above.</p>';
+      return;
+    }
+
+    clientList.innerHTML = "";
+    let firstSlug = null;
+
+    snapshot.forEach((docSnap) => {
+      const c = docSnap.data();
+      const slug = docSnap.id;
+      if (!firstSlug) firstSlug = slug;
+
+      const serviceTags = (c.services || [])
+        .map((s) => `<span class="service-tag">${SERVICE_LABEL[s] || s}</span>`)
+        .join("");
+      const durationLabel = c.durationMonths ? `${c.durationMonths}-month contract` : "No duration set";
+      const startLabel = c.launchDate ? ` · starts ${formatDateShort(c.launchDate)}` : "";
+
+      const row = document.createElement("div");
+      row.className = "client-row";
+      row.innerHTML = `
+        <div class="client-main">
+          <span class="client-name">${c.name || slug}</span>
+          <span class="client-meta">${durationLabel}${startLabel}</span>
+          <div class="service-tags">${serviceTags || '<span class="service-tag" style="opacity:.5;">No services set</span>'}</div>
+        </div>
+        <div class="client-actions">
+          <button class="icon-btn select-btn" data-slug="${slug}">Select</button>
+          <button class="icon-btn" data-action="copy" data-slug="${slug}">Copy link</button>
+          <button class="icon-btn" data-action="open" data-slug="${slug}">Open portal</button>
+        </div>
+      `;
+      clientList.appendChild(row);
+    });
+
+    if (!selectedClientSlug && firstSlug) {
+      selectClient(firstSlug);
+    } else {
+      highlightSelected();
+    }
+  });
+}
+
+function highlightSelected() {
+  document.querySelectorAll(".select-btn").forEach((btn) => {
+    const isSelected = btn.dataset.slug === selectedClientSlug;
+    btn.classList.toggle("active", isSelected);
+    btn.textContent = isSelected ? "Selected" : "Select";
+  });
+}
+
+clientList.addEventListener("click", (event) => {
+  const btn = event.target.closest("button[data-slug]");
+  if (!btn) return;
+  const slug = btn.dataset.slug;
+
+  if (btn.classList.contains("select-btn")) {
+    selectClient(slug);
+    return;
+  }
+  if (btn.dataset.action === "copy") {
+    navigator.clipboard.writeText(buildPortalLink(slug)).then(() => {
+      const original = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => (btn.textContent = original), 1500);
+    });
+  }
+  if (btn.dataset.action === "open") {
+    window.open(buildPortalLink(slug), "_blank");
+  }
+});
+
+function selectClient(slug) {
+  selectedClientSlug = slug;
+  highlightSelected();
+  noClientSelected.style.display = "none";
+  uploadForm.style.display = "block";
+  resetForm();
+
+  getDoc(doc(db, "clients", slug)).then((snap) => {
+    const name = snap.exists() ? snap.data().name || slug : slug;
+    uploadingForLabel.textContent = `for ${name}`;
+    reportsForLabel.textContent = `for ${name}`;
+  });
+
+  listenToReportsForClient(slug);
 }
 
 /* ------------------------------------------------------------------ */
@@ -259,6 +459,10 @@ function buildReportData(isPublished) {
 }
 
 async function saveReport(isPublished) {
+  if (!selectedClientSlug) {
+    alert("Select a client first.");
+    return;
+  }
   if (!reportMonth.value) {
     alert("Pick a month first.");
     return;
@@ -268,15 +472,13 @@ async function saveReport(isPublished) {
 
   try {
     const data = buildReportData(isPublished);
-
-    const reportsRef = collection(db, "clients", CLIENT_SLUG, "monthlyReports");
+    const reportsRef = collection(db, "clients", selectedClientSlug, "monthlyReports");
     if (editingReportId) {
       await updateDoc(doc(reportsRef, editingReportId), data);
     } else {
       data.createdAt = serverTimestamp();
       await addDoc(reportsRef, data);
     }
-
     resetForm();
   } catch (err) {
     alert("Something went wrong saving this report: " + err.message);
@@ -309,17 +511,19 @@ function resetForm() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Existing reports list                                                */
+/* Existing reports list — scoped to whichever client is selected      */
 /* ------------------------------------------------------------------ */
 
 function platformLabel(p) {
   return { meta: "Meta", tiktok: "TikTok", google: "Google Ads" }[p] || p;
 }
 
-function listenToReports() {
-  const reportsRef = collection(db, "clients", CLIENT_SLUG, "monthlyReports");
+function listenToReportsForClient(slug) {
+  if (unsubscribeReports) unsubscribeReports();
+
+  const reportsRef = collection(db, "clients", slug, "monthlyReports");
   const q = query(reportsRef, orderBy("monthStart", "desc"));
-  onSnapshot(q, (snapshot) => {
+  unsubscribeReports = onSnapshot(q, (snapshot) => {
     if (snapshot.empty) {
       reportsList.innerHTML =
         '<p class="empty-note">No reports uploaded yet — the first one you add will show up here.</p>';
@@ -358,9 +562,9 @@ function listenToReports() {
 
 reportsList.addEventListener("click", async (event) => {
   const btn = event.target.closest("button[data-action]");
-  if (!btn) return;
+  if (!btn || !selectedClientSlug) return;
   const id = btn.dataset.id;
-  const reportsRef = collection(db, "clients", CLIENT_SLUG, "monthlyReports");
+  const reportsRef = collection(db, "clients", selectedClientSlug, "monthlyReports");
 
   if (btn.dataset.action === "toggle") {
     const isPublished = btn.dataset.published === "true";
