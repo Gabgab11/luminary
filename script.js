@@ -16,7 +16,7 @@ import {
    the admin dashboard, e.g. yoursite.com/index.html?client=kairos-kreations
    ========================================================================== */
 
-const CLIENT_SLUG = new URLSearchParams(window.location.search).get("client") || "kairos-kreations";
+const CLIENT_SLUG = new URLSearchParams(window.location.search).get("client");
 
 // Sensible fallbacks in case a client doc is missing launchDate/duration
 // (e.g. one created by hand before those fields existed).
@@ -183,6 +183,15 @@ function showNotFoundState(){
   if (loading) loading.style.display = "none";
   if (notFound) notFound.style.display = "block";
   // Gate stays up on purpose — there's no valid client data to show underneath.
+}
+
+function showLandingState(){
+  const loading = document.getElementById("gateLoading");
+  const landing = document.getElementById("gateLanding");
+  if (loading) loading.style.display = "none";
+  if (landing) landing.style.display = "block";
+  // No client in the link at all — this is the shared front door, not a
+  // specific portal. Gate stays up; there's nothing behind it to show yet.
 }
 
 function initGateAfterClientLoad(){
@@ -462,6 +471,11 @@ function initCounters(){
 /* ---------------------------------------------------------------------- */
 
 async function boot(){
+  if (!CLIENT_SLUG){
+    showLandingState();
+    return;
+  }
+
   let clientSnap;
   try {
     clientSnap = await getDoc(doc(db, "clients", CLIENT_SLUG));
@@ -491,5 +505,3 @@ async function boot(){
 }
 
 document.addEventListener("DOMContentLoaded", boot);
-
-
