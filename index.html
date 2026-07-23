@@ -7,11 +7,13 @@
   // Runs immediately, before the page paints, so a returning visitor
   // (already saved in localStorage) never sees the gate flash on screen.
   // Scoped per client slug, matching the key script.js uses later.
+  // If there's no ?client= at all, this is the shared landing page —
+  // skip the check entirely so it doesn't hide the landing chooser.
   (function(){
     try{
       var params = new URLSearchParams(window.location.search);
-      var slug = params.get("client") || "kairos-kreations";
-      if (localStorage.getItem("luminaryPortalVisitor:" + slug)){
+      var slug = params.get("client");
+      if (slug && localStorage.getItem("luminaryPortalVisitor:" + slug)){
         document.documentElement.classList.add("skip-gate");
       }
     } catch(e){}
@@ -78,6 +80,14 @@
     <span class="eyebrow">Private client portal</span>
     <h2>Loading your portal&hellip;</h2>
     <p class="gate-sub">One second while we pull up your details.</p>
+  </div>
+
+  <div class="gate-card card-glass" id="gateLanding" style="display:none;">
+    <span class="eyebrow">Luminary Digital Group</span>
+    <h2>Welcome</h2>
+    <p class="gate-sub">Choose where you're headed.</p>
+    <a href="admin.html" class="gate-submit">Admin sign in <span aria-hidden="true">&rarr;</span></a>
+    <p class="gate-note">Here as a client? Open the private link you were sent &mdash; this page is just the front door.</p>
   </div>
 
   <div class="gate-card card-glass" id="gateNotFound" style="display:none;">
@@ -337,3 +347,4 @@
 <script type="module" src="script.js"></script>
 </body>
 </html>
+
