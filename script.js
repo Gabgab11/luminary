@@ -1,5 +1,7 @@
-import { db, CLIENT_SLUG } from "./firebase-init.js";
+import { db } from "./firebase-init.js";
 import {
+  doc,
+  getDoc,
   collection,
   query,
   where,
@@ -9,20 +11,21 @@ import {
 
 /* ==========================================================================
    Luminary Digital Group — Client Portal
-   All client-specific data lives in one place so this file can be reused
-   for any client by editing CLIENT only.
+   One template, many clients: which client's data loads depends entirely
+   on the ?client=slug in the URL. Each client gets their own link from
+   the admin dashboard, e.g. yoursite.com/index.html?client=kairos-kreations
    ========================================================================== */
 
+const CLIENT_SLUG = new URLSearchParams(window.location.search).get("client") || "kairos-kreations";
+
+// Sensible fallbacks in case a client doc is missing launchDate/duration
+// (e.g. one created by hand before those fields existed).
 const CLIENT = {
-  companyName: "Kairos Kreations",
+  companyName: "your business",
   agencyName: "Luminary Digital Group",
   launchDate: "2026-08-01T00:00:00",
   durationDays: 90,
-  phases: [
-    { key: "foundation",   label: "Foundation & launch", startDay: 0,  endDay: 30 },
-    { key: "optimization", label: "Optimization",         startDay: 30, endDay: 60 },
-    { key: "scale",        label: "Scale",                startDay: 60, endDay: 90 },
-  ],
+  phases: [],
 };
 
 // Paste your own Formspree endpoint here — from formspree.io, after you
@@ -31,6 +34,15 @@ const CLIENT = {
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mdaqlzob";
 
 const DAY_MS = 86400000;
+
+function computePhases(durationDays) {
+  const third = durationDays / 3;
+  return [
+    { key: "foundation", label: "Foundation & launch", startDay: 0, endDay: third },
+    { key: "optimization", label: "Optimization", startDay: third, endDay: third * 2 },
+    { key: "scale", label: "Scale", startDay: third * 2, endDay: durationDays },
+  ];
+}
 
 /* ---------------------------------------------------------------------- */
 /* Date / phase math                                                      */
@@ -83,22 +95,17 @@ function formatDate(iso){
   });
 }
 
-function addDays(iso, days){
-  const d = new Date(iso);
-  d.setDate(d.getDate() + days);
-  return d;
-}
-
 /* ---------------------------------------------------------------------- */
 /* Render: static client details                                          */
 /* ---------------------------------------------------------------------- */
 
 function renderClientDetails(){
-  document.querySelectorAll("#clientCompanyA, #navClientCompany").forEach(
+  document.querySelectorAll(".js-company-name").forEach(
     (el) => (el.textContent = CLIENT.companyName)
   );
   const chip = document.getElementById("launchDateChip");
   if (chip) chip.textContent = formatDate(CLIENT.launchDate);
+  document.title = `${CLIENT.companyName} · Luminary Digital Group`;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -108,12 +115,12 @@ function renderClientDetails(){
    can type any name — it does not authenticate or restrict access. Access
    control for this portal is the private link itself.
 
-   The visitor's details are saved to this browser's localStorage so a
-   refresh (or coming back later on the same device) skips the form. It
-   does NOT sync across devices or give you a central list of leads — for
-   that, wire up the fetch() call below to a form backend of your choice. */
+   The visitor's details are saved to this browser's localStorage, scoped
+   to this specific client's slug, so a refresh (or coming back later on
+   the same device) skips the form — without leaking a name typed on one
+   client's portal into a different client's portal on the same device. */
 
-const VISITOR_STORAGE_KEY = "luminaryPortalVisitor";
+const VISITOR_STORAGE_KEY = `luminaryPortalVisitor:${CLIENT_SLUG}`;
 
 function loadSavedVisitor(){
   try {
@@ -146,7 +153,8 @@ function sendToFormspree(visitor){
       firstName: visitor.firstName,
       lastName: visitor.lastName,
       email: visitor.email,
-      _subject: `Portal opened: ${visitor.firstName} ${visitor.lastName}`,
+      client: CLIENT.companyName,
+      _subject: `Portal opened: ${visitor.firstName} ${visitor.lastName} (${CLIENT.companyName})`,
       _replyto: visitor.email,
     }),
   }).catch(() => {
@@ -169,18 +177,30 @@ function dismissGate(){
   document.body.classList.remove("gate-active");
 }
 
-function initGate(){
-  const gate = document.getElementById("gate");
-  const form = document.getElementById("gateForm");
-  if (!gate || !form) return;
+function showNotFoundState(){
+  const loading = document.getElementById("gateLoading");
+  const notFound = document.getElementById("gateNotFound");
+  if (loading) loading.style.display = "none";
+  if (notFound) notFound.style.display = "block";
+  // Gate stays up on purpose — there's no valid client data to show underneath.
+}
 
-  // Returning visitor on this device/browser — skip the form entirely.
+function initGateAfterClientLoad(){
+  const loading = document.getElementById("gateLoading");
+  const form = document.getElementById("gateForm");
+  if (!form) return;
+
+  // Returning visitor on this device/browser, for this specific client —
+  // skip the form entirely.
   const saved = loadSavedVisitor();
   if (saved){
     applyVisitorToPage(saved);
     dismissGate();
     return;
   }
+
+  if (loading) loading.style.display = "none";
+  form.style.display = "block";
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -249,9 +269,9 @@ function renderMissionControl(){
   badge.textContent = badgeLabel;
 
   if (status.state === "pre-launch"){
-    statusText.innerHTML = `Launch is in <strong>${status.daysUntilLaunch} day${status.daysUntilLaunch === 1 ? "" : "s"}</strong> — on ${formatDate(CLIENT.launchDate)} the 90-day clock starts and this bar starts moving.`;
+    statusText.innerHTML = `Launch is in <strong>${status.daysUntilLaunch} day${status.daysUntilLaunch === 1 ? "" : "s"}</strong> — on ${formatDate(CLIENT.launchDate)} the ${CLIENT.durationDays}-day clock starts and this bar starts moving.`;
   } else if (status.state === "complete"){
-    statusText.innerHTML = `The 90-day engagement is <strong>complete</strong>. Everything below stays here as your record — let's talk about what's next.`;
+    statusText.innerHTML = `The ${CLIENT.durationDays}-day engagement is <strong>complete</strong>. Everything below stays here as your record — let's talk about what's next.`;
   } else {
     const dayNum = status.elapsedDays + 1;
     statusText.innerHTML = `Day <strong>${dayNum}</strong> of <strong>${CLIENT.durationDays}</strong> — currently in the <strong>${badgeLabel}</strong> phase.`;
@@ -438,16 +458,38 @@ function initCounters(){
 }
 
 /* ---------------------------------------------------------------------- */
-/* Init                                                                    */
+/* Boot — fetch this client's data first, then render everything          */
 /* ---------------------------------------------------------------------- */
 
-document.addEventListener("DOMContentLoaded", () => {
+async function boot(){
+  let clientSnap;
+  try {
+    clientSnap = await getDoc(doc(db, "clients", CLIENT_SLUG));
+  } catch (err) {
+    showNotFoundState();
+    return;
+  }
+
+  if (!clientSnap.exists()){
+    showNotFoundState();
+    return;
+  }
+
+  const c = clientSnap.data();
+  CLIENT.companyName = c.name || CLIENT.companyName;
+  CLIENT.launchDate = c.launchDate || CLIENT.launchDate;
+  CLIENT.durationDays = c.durationMonths ? c.durationMonths * 30 : CLIENT.durationDays;
+  CLIENT.phases = computePhases(CLIENT.durationDays);
+
   renderClientDetails();
   renderMissionControl();
   initLiveReports();
   initReveal();
   initCounters();
-  initGate();
+  initGateAfterClientLoad();
   initLogout();
-});
+}
+
+document.addEventListener("DOMContentLoaded", boot);
+
 
