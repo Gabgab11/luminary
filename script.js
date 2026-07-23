@@ -1,3 +1,12 @@
+import { db, CLIENT_SLUG } from "./firebase-init.js";
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
 /* ==========================================================================
    Luminary Digital Group — Client Portal
    All client-specific data lives in one place so this file can be reused
@@ -13,11 +22,6 @@ const CLIENT = {
     { key: "foundation",   label: "Foundation & launch", startDay: 0,  endDay: 30 },
     { key: "optimization", label: "Optimization",         startDay: 30, endDay: 60 },
     { key: "scale",        label: "Scale",                startDay: 60, endDay: 90 },
-  ],
-  reports: [
-    { key: "foundation",   label: "Month 1 report",  window: "Days 1–30"  },
-    { key: "optimization", label: "Month 2 report",  window: "Days 31–60" },
-    { key: "scale",        label: "Month 3 report",  window: "Days 61–90" },
   ],
 };
 
@@ -279,48 +283,91 @@ function renderMissionControl(){
 }
 
 /* ---------------------------------------------------------------------- */
-/* Render: monthly report cards                                          */
+/* Render: monthly report cards — live from Firestore                     */
 /* ---------------------------------------------------------------------- */
+/* Pulls only PUBLISHED reports (enforced by the Firestore security rules,
+   not just this code) and groups them by month. A month can have up to
+   three rows underneath it — one per ad platform — uploaded from the
+   admin dashboard. Updates in real time: publish something in admin.html
+   and it appears here within a second or two, no refresh needed. */
 
-function renderReportCards(){
+const PLATFORM_LABEL = { meta: "Meta", tiktok: "TikTok", google: "Google Ads" };
+
+function formatMoney(value){
+  if (value === null || value === undefined) return null;
+  return "$" + Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
+
+function initLiveReports(){
   const grid = document.getElementById("reportsGrid");
-  const status = getCampaignStatus();
-  grid.innerHTML = "";
+  if (!grid) return;
 
-  CLIENT.reports.forEach((report) => {
-    const phaseDef = CLIENT.phases.find((p) => p.key === report.key);
-    const unlockDate = addDays(CLIENT.launchDate, phaseDef.endDay);
-    const isUnlocked =
-      status.state === "complete" ||
-      (status.state === "active" && status.elapsedDays >= phaseDef.endDay);
+  const reportsRef = collection(db, "clients", CLIENT_SLUG, "monthlyReports");
+  const q = query(reportsRef, where("isPublished", "==", true), orderBy("monthStart", "asc"));
 
-    const card = document.createElement("article");
-    card.className = `report-card${isUnlocked ? " is-unlocked" : ""}`;
-    card.innerHTML = `
-      <div class="report-card-head">
-        <span class="report-month">${report.window}</span>
-        <span class="report-status-icon">
-          <svg viewBox="0 0 24 24"><use href="#${isUnlocked ? "icon-check" : "icon-lock"}"/></svg>
-        </span>
-      </div>
-      <h3>${report.label}</h3>
-      <p class="report-note">${
-        isUnlocked
-          ? "Report, summary, and recommendations are ready below."
-          : `Unlocks ${formatDate(unlockDate.toISOString())}.`
-      }</p>
-      <button class="report-cta" type="button" ${isUnlocked ? "" : "disabled"}>
-        <svg viewBox="0 0 24 24" style="width:15px;height:15px"><use href="#icon-download"/></svg>
-        ${isUnlocked ? "View report" : "Locked"}
-      </button>
-    `;
-    if (isUnlocked){
-      card.querySelector("button").addEventListener("click", () => {
-        alert(`Your ${report.label.toLowerCase()} will open here once it's uploaded.`);
+  onSnapshot(
+    q,
+    (snapshot) => {
+      if (snapshot.empty){
+        grid.innerHTML = `
+          <div class="report-card">
+            <div class="report-card-head">
+              <span class="report-month">Coming soon</span>
+              <span class="report-status-icon"><svg viewBox="0 0 24 24"><use href="#icon-lock"/></svg></span>
+            </div>
+            <h3>Your first report</h3>
+            <p class="report-note">This fills in automatically the moment your first month's report is published — nothing to request.</p>
+          </div>`;
+        return;
+      }
+
+      // Group the flat list of platform rows into one entry per month.
+      const byMonth = new Map();
+      snapshot.forEach((docSnap) => {
+        const r = docSnap.data();
+        if (!byMonth.has(r.monthStart)) byMonth.set(r.monthStart, []);
+        byMonth.get(r.monthStart).push(r);
       });
+
+      grid.innerHTML = "";
+      byMonth.forEach((platformRows, monthStart) => {
+        const monthLabel = new Date(monthStart + "T00:00:00").toLocaleDateString("en-US", {
+          month: "long",
+          year: "numeric",
+        });
+
+        const totalSpend = platformRows.reduce((sum, r) => sum + (Number(r.spend) || 0), 0);
+        const totalResults = platformRows.reduce((sum, r) => sum + (Number(r.results) || 0), 0);
+        const note = platformRows.find((r) => r.adminNotes)?.adminNotes;
+
+        const breakdown = platformRows
+          .map((r) => {
+            const spend = formatMoney(r.spend);
+            const parts = [];
+            if (spend) parts.push(spend);
+            if (r.results != null) parts.push(`${r.results} results`);
+            return `<li><span>${PLATFORM_LABEL[r.platform] || r.platform}</span><span>${parts.join(" · ") || "—"}</span></li>`;
+          })
+          .join("");
+
+        const card = document.createElement("article");
+        card.className = "report-card is-unlocked";
+        card.innerHTML = `
+          <div class="report-card-head">
+            <span class="report-month">${monthLabel}</span>
+            <span class="report-status-icon"><svg viewBox="0 0 24 24"><use href="#icon-check"/></svg></span>
+          </div>
+          <h3>${formatMoney(totalSpend) || "$0"} spent · ${totalResults} results</h3>
+          <ul class="platform-breakdown">${breakdown}</ul>
+          ${note ? `<p class="report-note">${note}</p>` : ""}
+        `;
+        grid.appendChild(card);
+      });
+    },
+    () => {
+      grid.innerHTML = `<p class="report-note">Couldn't load reports right now — try refreshing.</p>`;
     }
-    grid.appendChild(card);
-  });
+  );
 }
 
 /* ---------------------------------------------------------------------- */
@@ -397,9 +444,10 @@ function initCounters(){
 document.addEventListener("DOMContentLoaded", () => {
   renderClientDetails();
   renderMissionControl();
-  renderReportCards();
+  initLiveReports();
   initReveal();
   initCounters();
   initGate();
   initLogout();
 });
+
