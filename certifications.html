@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Certifications — Luminary Digital Group</title>
+<meta name="description" content="Certifications and credentials held by the Luminary Digital Group team." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+
+<style>
+  .page-hero{ padding: 76px 28px 20px; text-align: center; }
+  .page-hero h1{ font-size: clamp(32px, 5vw, 50px); margin: 18px 0 16px; }
+  .page-hero p{ max-width: 560px; margin: 0 auto; font-size: 16.5px; }
+
+  .cert-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 860px){ .cert-grid{ grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px){ .cert-grid{ grid-template-columns: 1fr; } }
+
+  .cert-card{
+    background: var(--paper); border: 1.5px dashed var(--line-strong); border-radius: var(--radius-md);
+    padding: 30px 24px; text-align: center; color: var(--ink-faint);
+  }
+  .cert-badge{
+    width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 16px;
+    background: var(--card); display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint);
+  }
+  .cert-card h3{ font-size: 15.5px; color: var(--ink-soft); margin-bottom: 6px; }
+  .cert-card p{ font-size: 12.5px; color: var(--ink-faint); }
+
+  .editor-note{
+    max-width: 720px; margin: 0 auto 60px; padding: 20px 24px;
+    background: var(--paper-warm); border-radius: var(--radius-md); border: 1px solid var(--line);
+    font-size: 13.5px; color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand-word">Luminary<span class="brand-word-light">Digital&nbsp;Group</span></a>
+    <nav class="nav-links">
+      <a href="index.html#work">Work</a>
+      <a href="about.html">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="certifications.html">Certifications</a>
+      <a href="index.html#thoughts">Thoughts</a>
+    </nav>
+    <a href="index.html#contact" class="nav-cta">Start a project</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="page-hero reveal">
+    <span class="section-eyebrow" style="justify-content:center;">Credentials</span>
+    <h1>Certifications</h1>
+    <p>The training and platform certifications behind the work we deliver.</p>
+  </section>
+
+  <section class="section tight">
+    <div class="editor-note reveal">
+      <strong>Editing note:</strong> these are placeholders, not real certifications — swap in
+      your actual ones (name, issuing body, year) and delete any card you don't need.
+      Each card is a simple block in <code>certifications.html</code>, easy to duplicate.
+    </div>
+
+    <div class="cert-grid">
+      <div class="cert-card reveal">
+        <div class="cert-badge">LOGO</div>
+        <h3>[Certification name]</h3>
+        <p>[Issuing body · year]</p>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-badge">LOGO</div>
+        <h3>[Certification name]</h3>
+        <p>[Issuing body · year]</p>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-badge">LOGO</div>
+        <h3>[Certification name]</h3>
+        <p>[Issuing body · year]</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Luminary Digital Group</div>
+      <p>We build digital homes for brands with real culture behind them — websites, apps, and growth, done with care.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Site</div>
+      <a href="index.html#work">Work</a>
+      <a href="about.html">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="certifications.html">Certifications</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Connect</div>
+      <a href="index.html#contact">Start a project</a>
+      <a href="https://www.instagram.com/mr_eyanu/" target="_blank" rel="noopener">Instagram ↗</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© Luminary Digital Group. All rights reserved.</div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
