@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+  (function(){
+    try{
+      if (localStorage.getItem("luminaryTheme") === "dark"){
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    } catch(e){}
+  })();
+</script>
+<title>Luminary Digital Group — Web Design, Apps & Growth for Culture-First Brands</title>
+<meta name="description" content="Luminary Digital Group builds digital homes for brands with real culture behind them — websites, mobile apps, SEO, Google Ads & cybersecurity for hospitality, heritage, and lifestyle brands." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+
+<style>
+  /* Homepage-only styles */
+  .hero{ padding: 76px 28px 40px; text-align: center; }
+  .hero-inner{ max-width: 800px; margin: 0 auto; }
+  .hero h1{ font-size: clamp(38px, 6.4vw, 68px); margin: 20px 0 22px; }
+  .hero-sub{ font-size: 18px; max-width: 600px; margin: 0 auto; }
+  .hero-cta{ margin-top: 36px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .work-grid{ display: grid; gap: 20px; }
+  .work-card{
+    display: grid; grid-template-columns: 1fr 1.3fr; gap: 0; align-items: stretch;
+    background: var(--card); border-radius: var(--radius-lg); overflow: hidden;
+    border: 1px solid var(--line); transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .work-card:hover{ transform: translateY(-3px); box-shadow: 0 30px 50px -30px rgba(20,17,13,0.2); }
+  .work-visual{
+    position: relative; min-height: 220px;
+    background: linear-gradient(135deg, var(--orange), var(--amber));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .work-visual span{
+    font-family: var(--font-display); font-weight: 700; font-size: 15px; color: rgba(255,255,255,0.92);
+    letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  .work-body{ padding: 34px 36px; display: flex; flex-direction: column; gap: 12px; }
+  .work-tag{ font-family: var(--font-mono); font-size: 11.5px; color: var(--orange); text-transform: uppercase; letter-spacing: 0.06em; }
+  .work-body h3{ font-size: 22px; }
+  .work-body p{ font-size: 14.5px; }
+  .work-link{ margin-top: 6px; font-size: 13.5px; font-weight: 600; color: var(--ink); display: inline-flex; align-items: center; gap: 6px; }
+  .work-link:hover{ color: var(--orange); }
+  @media (max-width: 760px){ .work-card{ grid-template-columns: 1fr; } .work-visual{ min-height: 140px; } }
+
+  .services-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 900px){ .services-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px){ .services-grid{ grid-template-columns: 1fr; } }
+  .service-card{
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-md);
+    padding: 30px 26px; transition: border-color .3s var(--ease), transform .3s var(--ease);
+  }
+  .service-card:hover{ border-color: var(--orange); transform: translateY(-3px); }
+  .service-index{ font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+  .service-card h3{ font-size: 18px; margin: 14px 0 8px; }
+  .service-card p{ font-size: 13.5px; }
+
+  .blog-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 860px){ .blog-grid{ grid-template-columns: 1fr; } }
+  .blog-card{
+    background: var(--paper-warm); border: 1px solid var(--line); border-radius: var(--radius-md);
+    padding: 26px 24px; display: flex; flex-direction: column; gap: 10px;
+    transition: border-color .3s var(--ease);
+  }
+  .blog-card:hover{ border-color: var(--orange); }
+  .blog-meta{ font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); }
+  .blog-card h3{ font-size: 17px; }
+  .blog-card p{ font-size: 13.5px; }
+  .blog-read{ font-size: 13px; font-weight: 600; margin-top: auto; }
+  .blog-read:hover{ color: var(--orange); }
+
+  .contact-wrap{ display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 60px; }
+  @media (max-width: 860px){ .contact-wrap{ grid-template-columns: 1fr; gap: 40px; } }
+  .contact-form{ display: grid; gap: 14px; }
+  .form-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px){ .form-row{ grid-template-columns: 1fr; } }
+  .contact-form label{ font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); display: block; margin-bottom: 6px; }
+  .contact-form input, .contact-form select, .contact-form textarea{
+    width: 100%; border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+    padding: 13px 15px; font-family: var(--font-body); font-size: 14.5px; color: var(--ink);
+    background: var(--paper);
+  }
+  .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus{
+    outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,106,43,0.1);
+  }
+  .contact-note{ font-size: 12.5px; color: var(--ink-faint); margin-top: 4px; }
+  .form-status{ font-size: 13.5px; margin-top: 10px; display: none; }
+  .form-status.is-visible{ display: block; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand-word">Luminary<span class="brand-word-light">Digital&nbsp;Group</span></a>
+    <nav class="nav-links">
+      <a href="index.html#work">Work</a>
+      <a href="about.html">About</a>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#thoughts">Thoughts</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
+    <a href="#contact" class="nav-cta">Start a project</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-inner reveal">
+      <span class="section-eyebrow" style="justify-content:center;">Web design &amp; digital branding</span>
+      <h1>We build digital homes for brands with <span class="accent-text">real culture</span> behind them.</h1>
+      <p class="hero-sub">
+        Restaurants, heritage tourism, hospitality — the kind of brands whose story is
+        bold enough to carry the design, not the other way around. Luminary Digital Group
+        turns that story into a website, an app, and a growth engine.
+      </p>
+      <div class="hero-cta">
+        <a href="#work" class="btn btn-primary">See the work</a>
+        <a href="#contact" class="btn btn-outline">Start a project</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="orbit-wrap reveal" aria-hidden="false">
+    <div class="orbit-stage">
+      <div class="orbit-ring">
+        <a href="https://www.instagram.com/mr_eyanu/" target="_blank" rel="noopener" class="orbit-item is-linked" style="transform: rotateY(0deg) translateZ(140px);" aria-label="Instagram">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.6"/><circle cx="17.2" cy="6.8" r="0.8" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <div class="orbit-item" style="transform: rotateY(60deg) translateZ(140px);" aria-label="TikTok">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v9.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 4c.4 2.2 2 3.8 4 4.1"/></svg>
+        </div>
+        <div class="orbit-item" style="transform: rotateY(120deg) translateZ(140px);" aria-label="Facebook">
+          <svg width="24" height="24" viewBox="0 0 24 24"><text x="12" y="17" text-anchor="middle" font-size="14" font-family="Georgia, serif" font-weight="700" fill="currentColor">f</text></svg>
+        </div>
+        <div class="orbit-item" style="transform: rotateY(180deg) translateZ(140px);" aria-label="LinkedIn">
+          <svg width="24" height="24" viewBox="0 0 24 24"><text x="12" y="16" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" font-weight="700" fill="currentColor">in</text></svg>
+        </div>
+        <div class="orbit-item" style="transform: rotateY(240deg) translateZ(140px);" aria-label="X (Twitter)">
+          <svg width="24" height="24" viewBox="0 0 24 24"><text x="12" y="16" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" font-weight="700" fill="currentColor">X</text></svg>
+        </div>
+        <div class="orbit-item" style="transform: rotateY(300deg) translateZ(140px);" aria-label="YouTube">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-strip reveal">
+    <div class="stat">
+      <div class="stat-num">4+</div>
+      <div class="stat-label">Years building</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">46+</div>
+      <div class="stat-label">Projects delivered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Clients worldwide</div>
+    </div>
+  </div>
+
+  <p class="focus-line reveal">Dynamic animation · Motion design · Framer · Figma · WordPress · Wix</p>
+
+  <!-- ============ WORK ============ -->
+  <section class="section" id="work">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Recent projects</span>
+      <h2>Culture-first brands, built to travel</h2>
+      <p class="section-lede">A handful of the brands we've built digital homes for.</p>
+    </div>
+
+    <div class="work-grid">
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Enish Global</span></div>
+        <div class="work-body">
+          <span class="work-tag">01 · Hospitality</span>
+          <h3>Enish Global</h3>
+          <p>An updated site for the Nigerian-led restaurant group, built to carry the confidence of African flavour into a global, mobile-first experience.</p>
+          <a href="https://enishglobal.com/" target="_blank" rel="noopener" class="work-link">Visit enishglobal.com ↗</a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Kiza Dubai</span></div>
+        <div class="work-body">
+          <span class="work-tag">02 · Hospitality</span>
+          <h3>Kiza Dubai</h3>
+          <p>A dining experience site showcasing rich African heritage in a Dubai setting, pairing warmth and ceremony with a clean, image-led layout.</p>
+          <a href="https://kiza.ae/" target="_blank" rel="noopener" class="work-link">Visit kiza.ae ↗</a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Nigeria Everywhere</span></div>
+        <div class="work-body">
+          <span class="work-tag">03 · Culture platform</span>
+          <h3>Nigeria Everywhere</h3>
+          <p>A vibrant Afro-urban platform showcasing Nigeria's culture, creativity, and global influence — music, film, fashion, tourism, and innovation — built with bold visuals and a modern stack tuned for performance and SEO.</p>
+          <a href="https://nigeriaeverywhere.com/" target="_blank" rel="noopener" class="work-link">Visit nigeriaeverywhere.com ↗</a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Cardify Africa</span></div>
+        <div class="work-body">
+          <span class="work-tag">04 · Product / Fintech</span>
+          <h3>Cardify Africa</h3>
+          <p>A digital card platform designed for speed and trust, with clean flows for issuing and managing cards, built with the same mobile-first discipline as the rest of the Luminary portfolio.</p>
+          <a href="https://app.cardify.co/" target="_blank" rel="noopener" class="work-link">Visit app.cardify.co ↗</a>
+        </div>
+      </article>
+
+      <article class="work-card reveal">
+        <div class="work-visual"><span>Rhays Restaurant</span></div>
+        <div class="work-body">
+          <span class="work-tag">05 · Hospitality</span>
+          <h3>Rhays Restaurant, Texas</h3>
+          <p>A warm, appetite-first site for a Texas restaurant, built to make the menu and the room feel inviting before a guest ever walks in.</p>
+          <a href="https://rhayshtx.com/" target="_blank" rel="noopener" class="work-link">Visit rhayshtx.com ↗</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section class="section section-alt" id="services">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">What we offer</span>
+      <h2>Everything your brand needs to grow</h2>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="service-index">01</span>
+        <h3>SEO</h3>
+        <p>Search engine optimization to get your brand found.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">02</span>
+        <h3>Google Ads Restructuring</h3>
+        <p>Cleaner campaign structure for better spend &amp; results.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">03</span>
+        <h3>Website Development</h3>
+        <p>Fast, mobile-first sites built to convert.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">04</span>
+        <h3>Mobile App Development</h3>
+        <p>iOS &amp; Android apps built for the African &amp; American market.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">05</span>
+        <h3>Cybersecurity Solutions</h3>
+        <p>Security assessments &amp; protection for your digital assets.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-index">06</span>
+        <h3>Brand &amp; Content Strategy</h3>
+        <p>Positioning, messaging &amp; content that carries your story.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section class="section" id="process">
+    <div class="section-head center reveal" style="margin-left:auto;margin-right:auto;">
+      <span class="section-eyebrow" style="justify-content:center;">How it starts</span>
+      <h2>Our process</h2>
+      <p class="section-lede">From a phone call to a live client portal — no guesswork in between.</p>
+    </div>
+
+    <div class="process-grid">
+      <div class="process-step reveal">
+        <span class="process-num">01</span>
+        <h3>Book a consultation call</h3>
+        <p>Tell us about the brand. We'll tell you honestly whether we're the right fit.</p>
+        <a href="#contact" class="process-link">Book now ↓</a>
+      </div>
+      <div class="process-step reveal">
+        <span class="process-num">02</span>
+        <h3>Sign up</h3>
+        <p>We scope the project and get the paperwork out of the way, fast.</p>
+      </div>
+      <div class="process-step reveal">
+        <span class="process-num">03</span>
+        <h3>Receive your client portal</h3>
+        <p>A private link where you'll watch the whole project move, month by month.</p>
+      </div>
+      <div class="process-step reveal">
+        <span class="process-num">04</span>
+        <h3>Boom.</h3>
+        <p>Leave it all to Luminary.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THOUGHTS / BLOG TEASER ============ -->
+  <section class="section" id="thoughts">
+    <div class="section-head reveal">
+      <span class="section-eyebrow">Design thoughts</span>
+      <h2>Notes from the studio</h2>
+    </div>
+
+    <div class="blog-grid">
+      <article class="blog-card reveal">
+        <span class="blog-meta">Mar 8, 2025 · 6 min read</span>
+        <h3>Starting and growing a career in web design</h3>
+        <p>As the internet keeps developing, the jobs tied to it grow too — especially in web design and development.</p>
+        <a href="blog-career.html" class="blog-read">Read the piece ↗</a>
+      </article>
+      <article class="blog-card reveal">
+        <span class="blog-meta">Mar 15, 2023 · 6 min read</span>
+        <h3>Create a landing page that performs great</h3>
+        <p>A good landing page is a standalone tool for generating leads and sales. Here's how to make one earn its keep.</p>
+        <a href="blog-landing-page.html" class="blog-read">Read the piece ↗</a>
+      </article>
+      <article class="blog-card reveal">
+        <span class="blog-meta">Feb 28, 2022 · 6 min read</span>
+        <h3>How can designers prepare for the future?</h3>
+        <p>The tools change fast. What stays constant is understanding people well enough to design for them.</p>
+        <a href="blog-future.html" class="blog-read">Read the piece ↗</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="section section-alt" id="contact">
+    <div class="contact-wrap">
+      <div class="reveal">
+        <span class="section-eyebrow">Let's work together</span>
+        <h2>Have a brand that deserves a real digital home?</h2>
+        <p class="section-lede" style="margin-top:16px;">Tell us about the project — we'll get back to you personally, not with a form-letter.</p>
+      </div>
+
+      <form class="contact-form reveal" id="contactForm">
+        <div class="form-row">
+          <div>
+            <label for="cfName">Name</label>
+            <input type="text" id="cfName" name="name" required />
+          </div>
+          <div>
+            <label for="cfEmail">Email</label>
+            <input type="email" id="cfEmail" name="email" required />
+          </div>
+        </div>
+        <div>
+          <label for="cfProject">Type of project</label>
+          <select id="cfProject" name="project">
+            <option>Website Development</option>
+            <option>Mobile App Development</option>
+            <option>SEO</option>
+            <option>Google Ads Restructuring</option>
+            <option>Cybersecurity Solutions</option>
+            <option>Brand &amp; Content Strategy</option>
+            <option>Something else</option>
+          </select>
+        </div>
+        <div>
+          <label for="cfMessage">Message</label>
+          <textarea id="cfMessage" name="message" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="justify-self:start;">Send message</button>
+        <p class="contact-note">Messages are sent straight to our inbox.</p>
+        <p class="form-status" id="formStatus"></p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Luminary Digital Group</div>
+      <p>We build digital homes for brands with real culture behind them — websites, apps, and growth, done with care.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Site</div>
+      <a href="index.html#work">Work</a>
+      <a href="about.html">About</a>
+      <a href="index.html#services">Services</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Connect</div>
+      <a href="#contact">Start a project</a>
+      <a href="https://www.instagram.com/mr_eyanu/" target="_blank" rel="noopener">Instagram ↗</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© Luminary Digital Group. All rights reserved.</div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
