@@ -2,157 +2,129 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<script>
-  (function(){
-    try{
-      if (localStorage.getItem("luminaryTheme") === "dark"){
-        document.documentElement.setAttribute("data-theme", "dark");
-      }
-    } catch(e){}
-  })();
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>About — Luminary Digital Group</title>
+<meta name="claude:viewport-fit-sides" content="cover" />
 <meta name="description" content="Luminary Digital Group is a web design, app development, and growth studio for brands with real culture behind them." />
-
+<link rel="canonical" href="https://luminarydigitalgroup.com/about" />
+<meta name="theme-color" content="#050504" />
+<script>document.documentElement.classList.add("js");</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400&family=Manrope:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
-
-<style>
-  .about-hero{ padding: 76px 28px 20px; }
-  .about-hero-inner{ max-width: 760px; margin: 0 auto; text-align: center; }
-  .about-hero h1{ font-size: clamp(34px, 5.5vw, 54px); margin: 18px 0 20px; }
-  .about-hero p{ font-size: 17.5px; max-width: 600px; margin: 0 auto; }
-
-  .value-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  @media (max-width: 860px){ .value-grid{ grid-template-columns: 1fr; } }
-  .value-card{ background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 30px 26px; }
-  .value-card h3{ font-size: 18px; margin-bottom: 10px; }
-  .value-card p{ font-size: 14px; }
-
-  .focus-block{
-    max-width: var(--maxw); margin: 0 auto; padding: 0 28px 90px;
-    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
-  }
-  .focus-chip{
-    font-family: var(--font-mono); font-size: 12.5px; color: var(--ink-soft);
-    border: 1px solid var(--line-strong); border-radius: 100px; padding: 8px 16px;
-  }
-</style>
 </head>
-<body>
+<body class="page-about">
 
-<div class="grain" aria-hidden="true"></div>
+<div id="valley" aria-hidden="true"><div class="vignette"></div><div class="grain"></div></div>
+<div class="loader" id="loader" aria-hidden="true"><span></span></div>
 
-<header class="nav">
-  <div class="nav-inner">
-    <a href="index.html" class="brand-word">Luminary<span class="brand-word-light">Digital&nbsp;Group</span></a>
-    <nav class="nav-links">
-      <a href="index.html#work">Work</a>
-      <a href="about.html">About</a>
-      <a href="index.html#services">Services</a>
-      <a href="index.html#thoughts">Thoughts</a>
-    </nav>
-    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
-    <a href="index.html#contact" class="nav-cta">Start a project</a>
-  </div>
+<header class="site-head ui-fade">
+  <a class="logo" href="index.html" aria-label="Luminary Digital Group, home">Luminary<small>Digital Group</small></a>
+  <nav class="site-nav" aria-label="Main">
+    <a href="index.html#work">Work</a>
+    <a href="about.html" aria-current="page">About</a>
+    <a href="index.html#services">Services</a>
+    <a href="index.html#thoughts">Thoughts</a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menuSheet">Menu</button>
+    <a class="pill" href="index.html#contact">Start a project</a>
+  </nav>
 </header>
+<nav class="menu-sheet" id="menuSheet" aria-label="Menu">
+  <a href="index.html#work">Work</a>
+  <a href="about.html">About</a>
+  <a href="index.html#services">Services</a>
+  <a href="index.html#thoughts">Thoughts</a>
+  <a href="gabriel-uji.html">Founder</a>
+  <a href="index.html#contact">Start a project</a>
+  <a class="small" href="https://portal.luminarydigitalgroup.com/login/">Client login</a>
+</nav>
 
 <main>
 
-  <section class="about-hero">
-    <div class="about-hero-inner reveal">
-      <span class="section-eyebrow" style="justify-content:center;">About us</span>
-      <h1>Design led by <span class="accent-text">culture</span>, not the other way around.</h1>
-      <p>
-        Luminary Digital Group builds digital homes for brands with real culture behind
-        them: restaurants, heritage tourism, hospitality — places where the story is bold
-        enough to carry the design. We work across web design, mobile app development,
-        SEO, Google Ads, and cybersecurity, so the brands we build for don't have to
-        stitch together five different vendors to grow.
-      </p>
-    </div>
+  <section class="hero sub">
+    <p class="kicker ui-fade">About us</p>
+    <h1>Design led by culture, not the other way around.</h1>
+    <p class="cap">Luminary Digital Group builds digital homes for brands with real culture behind them: restaurants, heritage tourism, hospitality, places where the story is bold enough to carry the design. We work across web design, mobile app development, SEO, Google Ads and cybersecurity, so the brands we build for don't have to stitch together five different vendors to grow.</p>
   </section>
 
-  <div class="stat-strip reveal">
-    <div class="stat"><div class="stat-num">4+</div><div class="stat-label">Years building</div></div>
-    <div class="stat"><div class="stat-num">46+</div><div class="stat-label">Projects delivered</div></div>
-    <div class="stat"><div class="stat-num">20+</div><div class="stat-label">Clients worldwide</div></div>
+  <div class="veil">
+
+    <div class="wrap">
+      <div class="stats reveal">
+        <div class="stat"><b>4+</b><span>Years building</span></div>
+        <div class="stat"><b>46+</b><span>Projects delivered</span></div>
+        <div class="stat"><b>20+</b><span>Clients worldwide</span></div>
+      </div>
+    </div>
+
+    <section class="band" id="approach">
+      <div class="wrap">
+        <div class="head-row reveal">
+          <div>
+            <span class="label">How we work</span>
+            <h2>Three things every project runs on</h2>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card reveal"><h3>Story first</h3><p>We start with what makes the brand actually true (the culture, the heritage, the room) and let that drive every design decision, not a template.</p></div>
+          <div class="card reveal"><h3>Mobile-first, always</h3><p>Most of the people who'll ever visit these sites are on a phone in a moving car deciding where to eat tonight. We build for that person first.</p></div>
+          <div class="card reveal"><h3>Built to perform</h3><p>A beautiful site that doesn't rank, load fast or convert isn't done. SEO, performance and clean structure are part of the design, not an afterthought.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap">
+        <div class="head-row reveal" style="justify-content:center;text-align:center">
+          <div>
+            <span class="label">What we work in</span>
+            <h2 style="margin:0 auto">Our stack</h2>
+          </div>
+        </div>
+        <div class="chips reveal"><span>Dynamic animation</span><span>Motion design</span><span>Framer</span><span>Figma</span><span>WordPress</span><span>Wix</span></div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap founder-strip reveal">
+        <figure class="portrait small"><img src="gabriel-uji-portrait.webp" width="900" height="1112" alt="Gabriel Uji, founder of Luminary Digital Group" loading="lazy" /></figure>
+        <div class="founder-strip-text">
+          <span class="label">Who leads it</span>
+          <h2>Founded by Gabriel Uji</h2>
+          <p class="lede">Software developer, product builder and digital marketer based in New York.</p>
+          <a class="ghost" href="gabriel-uji.html">Meet the founder</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="wrap cta reveal">
+        <span class="label">Let's talk</span>
+        <h2>Have a brand that deserves a real digital home?</h2>
+        <a class="pill" href="index.html#contact">Start a project</a>
+      </div>
+    </section>
+
   </div>
-
-  <section class="section" id="approach">
-    <div class="section-head center reveal" style="margin-left:auto;margin-right:auto;">
-      <span class="section-eyebrow" style="justify-content:center;">How we work</span>
-      <h2>Three things every project runs on</h2>
-    </div>
-
-    <div class="value-grid">
-      <div class="value-card reveal">
-        <h3>Story first</h3>
-        <p>We start with what makes the brand actually true — the culture, the heritage, the room — and let that drive every design decision, not a template.</p>
-      </div>
-      <div class="value-card reveal">
-        <h3>Mobile-first, always</h3>
-        <p>Most of the people who'll ever visit these sites are on a phone in a moving car deciding where to eat tonight. We build for that person first.</p>
-      </div>
-      <div class="value-card reveal">
-        <h3>Built to perform</h3>
-        <p>A beautiful site that doesn't rank, load fast, or convert isn't done. SEO, performance, and clean structure are part of the design, not an afterthought.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt tight">
-    <div class="section-head center reveal" style="margin-left:auto;margin-right:auto;">
-      <span class="section-eyebrow" style="justify-content:center;">What we work in</span>
-      <h2>Our stack</h2>
-    </div>
-    <div class="focus-block reveal">
-      <span class="focus-chip">Dynamic animation</span>
-      <span class="focus-chip">Motion design</span>
-      <span class="focus-chip">Framer</span>
-      <span class="focus-chip">Figma</span>
-      <span class="focus-chip">WordPress</span>
-      <span class="focus-chip">Wix</span>
-    </div>
-  </section>
-
-  <section class="section" style="text-align:center;">
-    <div class="reveal">
-      <span class="section-eyebrow" style="justify-content:center;">Let's talk</span>
-      <h2>Have a brand that deserves a real digital home?</h2>
-      <div class="hero-cta" style="margin-top:28px;">
-        <a href="index.html#contact" class="btn btn-primary">Start a project</a>
-      </div>
-    </div>
-  </section>
-
 </main>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <div>
-      <div class="footer-brand">Luminary Digital Group</div>
-      <p>We build digital homes for brands with real culture behind them — websites, apps, and growth, done with care.</p>
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <span class="logo">Luminary<small>Digital Group</small></span>
+        <p>We build digital homes for brands with real culture behind them: websites, apps and growth, done with care.</p>
+      </div>
+      <div class="foot-col"><b>Site</b><a href="index.html#work">Work</a><a href="about.html">About</a><a href="gabriel-uji.html">Founder</a><a href="index.html#services">Services</a></div>
+      <div class="foot-col"><b>Connect</b><a href="index.html#contact">Start a project</a><a href="https://www.instagram.com/mr_eyanu/" target="_blank" rel="noopener">Instagram ↗</a><a href="https://portal.luminarydigitalgroup.com/login/">Client login</a></div>
     </div>
-    <div class="footer-col">
-      <div class="footer-col-title">Site</div>
-      <a href="index.html#work">Work</a>
-      <a href="about.html">About</a>
-      <a href="gabriel-uji.html">Founder</a>
-      <a href="index.html#services">Services</a>
-    </div>
-    <div class="footer-col">
-      <div class="footer-col-title">Connect</div>
-      <a href="index.html#contact">Start a project</a>
-      <a href="https://www.instagram.com/mr_eyanu/" target="_blank" rel="noopener">Instagram ↗</a>
-    </div>
+    <div class="foot-mark" aria-hidden="true">Luminary</div>
+    <div class="foot-bottom"><span>© Luminary Digital Group. All rights reserved.</span><span>New York</span></div>
   </div>
-  <div class="footer-bottom">© Luminary Digital Group. All rights reserved.</div>
 </footer>
 
+<script src="valley.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

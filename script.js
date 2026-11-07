@@ -2,9 +2,7 @@
    Luminary Digital Group — shared site script (all pages)
    ========================================================================== */
 
-// Paste your own Formspree endpoint here (formspree.io → create a form →
-// copy the endpoint). Keep this separate from the client-portal form so
-// site inquiries and portal visitors don't land in the same inbox thread.
+// Formspree endpoint for site inquiries (unchanged from the previous site).
 const CONTACT_FORM_ENDPOINT = "https://formspree.io/f/xjgnagdp";
 
 function initReveal(){
@@ -17,8 +15,6 @@ function initReveal(){
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting){
-          // Stagger siblings inside the same grid/section so cards
-          // cascade in rather than popping in all at once.
           const parent = entry.target.parentElement;
           const siblingIndex = parent ? Array.from(parent.children).indexOf(entry.target) : 0;
           entry.target.style.transitionDelay = `${Math.min(siblingIndex, 6) * 70}ms`;
@@ -32,52 +28,43 @@ function initReveal(){
   items.forEach((el) => observer.observe(el));
 }
 
-function initHeroParallax(){
-  const hero = document.querySelector(".hero-inner");
-  if (!hero) return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+function initHeader(){
+  const head = document.querySelector(".site-head");
+  if (!head) return;
+  const update = () => head.classList.toggle("scrolled", window.scrollY > 40);
+  update();
+  window.addEventListener("scroll", update, { passive: true });
 
-  let ticking = false;
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const offset = Math.min(window.scrollY * 0.15, 70);
-        hero.style.transform = `translateY(${offset}px)`;
-        hero.style.opacity = String(Math.max(1 - window.scrollY / 700, 0.35));
-        ticking = false;
-      });
-    },
-    { passive: true }
-  );
+  const btn = document.getElementById("menuBtn");
+  const sheet = document.getElementById("menuSheet");
+  if (!btn || !sheet) return;
+  const setOpen = (open) => {
+    document.documentElement.classList.toggle("menu-open", open);
+    btn.setAttribute("aria-expanded", String(open));
+    btn.textContent = open ? "Close" : "Menu";
+  };
+  btn.addEventListener("click", () => setOpen(!document.documentElement.classList.contains("menu-open")));
+  sheet.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") setOpen(false); });
 }
 
-/* ---------------------------------------------------------------------- */
-/* Dark / light theme toggle                                              */
-/* ---------------------------------------------------------------------- */
-
-const THEME_KEY = "luminaryTheme";
-
-function initThemeToggle(){
-  const btn = document.getElementById("themeToggle");
-  if (!btn) return;
-
-  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-  btn.textContent = isDark ? "☀️" : "🌙";
-
-  btn.addEventListener("click", () => {
-    const nowDark = document.documentElement.getAttribute("data-theme") === "dark";
-    const next = nowDark ? "light" : "dark";
-    if (next === "dark"){
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-    }
-    try { localStorage.setItem(THEME_KEY, next); } catch (e){}
-    btn.textContent = next === "dark" ? "☀️" : "🌙";
-  });
+function initValleyControls(){
+  const valley = () => window.LuminaryValley;
+  const sound = document.getElementById("sound");
+  if (sound){
+    sound.addEventListener("click", () => {
+      const on = valley() ? valley().toggleSound() : false;
+      sound.setAttribute("aria-pressed", String(on));
+    });
+  }
+  // hovering the hero arrow brings the flight to a stop and scatters the lights
+  const go = document.getElementById("go");
+  if (go){
+    go.addEventListener("pointerenter", () => valley() && valley().startHover());
+    go.addEventListener("pointerleave", () => valley() && valley().stopHover());
+    go.addEventListener("focus", () => valley() && valley().startHover());
+    go.addEventListener("blur", () => valley() && valley().stopHover());
+  }
 }
 
 function initContactForm(){
@@ -89,18 +76,12 @@ function initContactForm(){
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (!CONTACT_FORM_ENDPOINT || CONTACT_FORM_ENDPOINT.includes("YOUR_SITE_FORM_ID")){
-      status.textContent = "Form isn't connected yet — add your Formspree endpoint in script.js.";
-      status.classList.add("is-visible");
-      return;
-    }
-
     submitBtn.disabled = true;
     submitBtn.textContent = "Sending…";
 
     try {
       const data = Object.fromEntries(new FormData(form).entries());
-      await fetch(CONTACT_FORM_ENDPOINT, {
+      const res = await fetch(CONTACT_FORM_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
@@ -109,13 +90,13 @@ function initContactForm(){
           _replyto: data.email,
         }),
       });
+      if (!res.ok) throw new Error("Request failed");
       form.reset();
-      status.textContent = "Thanks — we'll be in touch soon.";
-      status.classList.add("is-visible");
+      status.textContent = "Thanks. We'll be in touch soon.";
     } catch (err){
-      status.textContent = "Something went wrong sending that — try emailing us directly.";
-      status.classList.add("is-visible");
+      status.textContent = "That didn't send. Please try again in a moment, or message us on Instagram.";
     } finally {
+      status.classList.add("is-visible");
       submitBtn.disabled = false;
       submitBtn.textContent = "Send message";
     }
@@ -124,7 +105,7 @@ function initContactForm(){
 
 document.addEventListener("DOMContentLoaded", () => {
   initReveal();
-  initHeroParallax();
-  initThemeToggle();
+  initHeader();
+  initValleyControls();
   initContactForm();
 });
