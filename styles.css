@@ -375,3 +375,6 @@ main{position:relative;z-index:1}
   .founder-strip{flex-direction:column;align-items:center;text-align:center}
   .founder-strip-text{align-items:center}
 }
+.founder-hero h1{white-space:normal;font-size:clamp(64px, calc(128 * var(--u)), 150px)}
+.founder-hero h1 .h1-line{display:block;white-space:nowrap}
+@media (max-width:900px){.founder-hero h1{font-size:clamp(44px, 13vw, 100px)}}
