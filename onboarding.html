@@ -46,118 +46,68 @@
   <section class="hero sub ob-hero">
     <p class="kicker ui-fade">Client onboarding</p>
     <h1>Let's light it up.</h1>
-    <p class="cap">A few questions about you, your brand and what you want to build. It takes about five minutes, and it means our first call starts with ideas instead of introductions.</p>
+    <p class="cap">A few quick details so we can get started. It takes about two minutes.</p>
   </section>
 
   <div class="veil">
     <section class="band">
       <div class="wrap ob">
 
-        <ol class="ob-steps" id="obSteps" aria-label="Progress">
-          <li class="is-current"><span>01</span>You</li>
-          <li><span>02</span>Project</li>
-          <li><span>03</span>Brand</li>
-          <li><span>04</span>Scope</li>
-        </ol>
-        <div class="ob-bar" aria-hidden="true"><i id="obBar"></i></div>
-
         <form class="form ob-form" id="onboardingForm" novalidate>
-          <!-- honeypot: real people never see this -->
-          <div class="ob-hp" aria-hidden="true"><label>Leave this empty<input type="text" name="company_url" tabindex="-1" autocomplete="off" /></label></div>
+          <!-- spam trap: hidden from people and from autofill -->
+          <div class="ob-hp" aria-hidden="true"><label>Do not fill this<input type="text" name="ob_trap_x9" tabindex="-1" autocomplete="new-password" data-lpignore="true" data-1p-ignore /></label></div>
+          <input type="hidden" name="started" id="obStarted" />
 
-          <fieldset class="ob-panel is-active" data-step="0">
-            <legend><span class="label">Step 01</span><h2>Who are we building for?</h2></legend>
+          <div class="ob-panel is-active">
             <div class="form-row">
               <div><label for="ob-name">Your name *</label><input id="ob-name" name="name" autocomplete="name" required /></div>
-              <div><label for="ob-role">Your role</label><input id="ob-role" name="role" placeholder="Owner, marketing lead…" /></div>
+              <div><label for="ob-business">Business name *</label><input id="ob-business" name="business" autocomplete="organization" required /></div>
             </div>
             <div class="form-row">
               <div><label for="ob-email">Email *</label><input id="ob-email" name="email" type="email" autocomplete="email" required /></div>
               <div><label for="ob-phone">Phone / WhatsApp</label><input id="ob-phone" name="phone" type="tel" autocomplete="tel" /></div>
             </div>
-            <div class="form-row">
-              <div><label for="ob-business">Business name *</label><input id="ob-business" name="business" autocomplete="organization" required /></div>
-              <div><label for="ob-website">Current website</label><input id="ob-website" name="website" type="url" placeholder="https://" /></div>
-            </div>
-            <div><label for="ob-location">Where is the business based?</label><input id="ob-location" name="location" placeholder="City, country" /></div>
-          </fieldset>
+            <div><label for="ob-website">Current website or Instagram</label><input id="ob-website" name="website" placeholder="Optional" /></div>
 
-          <fieldset class="ob-panel" data-step="1" hidden>
-            <legend><span class="label">Step 02</span><h2>What do you need?</h2></legend>
             <div>
-              <span class="ob-q" id="svc-q">Services (pick all that apply) *</span>
+              <span class="ob-q" id="svc-q">What do you need? *</span>
               <div class="ob-chips" role="group" aria-labelledby="svc-q" data-required="services">
-                <label><input type="checkbox" name="services" value="Website design" /><span>Website design</span></label>
-                <label><input type="checkbox" name="services" value="Website redesign" /><span>Website redesign</span></label>
+                <label><input type="checkbox" name="services" value="Website" /><span>Website</span></label>
                 <label><input type="checkbox" name="services" value="Mobile app" /><span>Mobile app</span></label>
                 <label><input type="checkbox" name="services" value="E-commerce" /><span>E-commerce</span></label>
+                <label><input type="checkbox" name="services" value="Branding" /><span>Branding</span></label>
                 <label><input type="checkbox" name="services" value="SEO" /><span>SEO</span></label>
                 <label><input type="checkbox" name="services" value="Google Ads" /><span>Google Ads</span></label>
-                <label><input type="checkbox" name="services" value="Branding" /><span>Branding</span></label>
-                <label><input type="checkbox" name="services" value="Cybersecurity" /><span>Cybersecurity</span></label>
                 <label><input type="checkbox" name="services" value="Not sure yet" /><span>Not sure yet</span></label>
               </div>
             </div>
-            <div><label for="ob-about">Tell us about the business *</label><textarea id="ob-about" name="about" required placeholder="What you do, who you serve, what makes it yours."></textarea></div>
-            <div><label for="ob-goals">What should this project achieve?</label><textarea id="ob-goals" name="goals" placeholder="More bookings, a launch, a fresh look, ranking on Google…"></textarea></div>
-          </fieldset>
 
-          <fieldset class="ob-panel" data-step="2" hidden>
-            <legend><span class="label">Step 03</span><h2>Your brand and your people</h2></legend>
-            <div><label for="ob-audience">Who is your ideal customer?</label><textarea id="ob-audience" name="audience" placeholder="Age, location, what they care about, how they find you."></textarea></div>
             <div>
-              <span class="ob-q" id="assets-q">Do you have brand assets (logo, colours, photos)?</span>
-              <div class="ob-chips single" role="radiogroup" aria-labelledby="assets-q">
-                <label><input type="radio" name="assets" value="Yes, a full brand kit" /><span>Yes, a full kit</span></label>
-                <label><input type="radio" name="assets" value="Some pieces" /><span>Some pieces</span></label>
-                <label><input type="radio" name="assets" value="Starting from scratch" /><span>Starting from scratch</span></label>
-              </div>
-            </div>
-            <div><label for="ob-feel">Three words for how the brand should feel</label><input id="ob-feel" name="feel" placeholder="Warm, bold, rooted" /></div>
-            <div><label for="ob-inspo">Sites or brands you love (and competitors)</label><textarea id="ob-inspo" name="inspiration" placeholder="Links, names, and what you like about them."></textarea></div>
-          </fieldset>
-
-          <fieldset class="ob-panel" data-step="3" hidden>
-            <legend><span class="label">Step 04</span><h2>Budget and timing</h2></legend>
-            <div>
-              <span class="ob-q" id="budget-q">Budget range *</span>
+              <span class="ob-q" id="budget-q">Budget *</span>
               <div class="ob-chips single" role="radiogroup" aria-labelledby="budget-q" data-required="budget">
                 <label><input type="radio" name="budget" value="Under $2,500" /><span>Under $2.5k</span></label>
                 <label><input type="radio" name="budget" value="$2,500 – $5,000" /><span>$2.5k – $5k</span></label>
                 <label><input type="radio" name="budget" value="$5,000 – $10,000" /><span>$5k – $10k</span></label>
-                <label><input type="radio" name="budget" value="$10,000 – $25,000" /><span>$10k – $25k</span></label>
-                <label><input type="radio" name="budget" value="$25,000+" /><span>$25k+</span></label>
+                <label><input type="radio" name="budget" value="$10,000+" /><span>$10k+</span></label>
                 <label><input type="radio" name="budget" value="Not sure yet" /><span>Not sure yet</span></label>
               </div>
             </div>
+
             <div>
               <span class="ob-q" id="time-q">When do you want to launch?</span>
               <div class="ob-chips single" role="radiogroup" aria-labelledby="time-q">
                 <label><input type="radio" name="timeline" value="As soon as possible" /><span>ASAP</span></label>
                 <label><input type="radio" name="timeline" value="1–2 months" /><span>1–2 months</span></label>
-                <label><input type="radio" name="timeline" value="3–6 months" /><span>3–6 months</span></label>
+                <label><input type="radio" name="timeline" value="3+ months" /><span>3+ months</span></label>
                 <label><input type="radio" name="timeline" value="Flexible" /><span>Flexible</span></label>
               </div>
             </div>
-            <div class="form-row">
-              <div><label for="ob-date">Hard deadline, if any</label><input id="ob-date" name="deadline" type="date" /></div>
-              <div><label for="ob-source">How did you hear about us?</label>
-                <select id="ob-source" name="source">
-                  <option value="">Choose one</option>
-                  <option>Referral</option><option>Instagram</option><option>Google</option><option>LinkedIn</option><option>Saw your work</option><option>Other</option>
-                </select>
-              </div>
-            </div>
-            <div><label for="ob-notes">Anything else we should know?</label><textarea id="ob-notes" name="notes"></textarea></div>
-          </fieldset>
+
+            <div><label for="ob-about">Tell us about your project *</label><textarea id="ob-about" name="about" required placeholder="A few lines on your business and what you'd like us to build."></textarea></div>
+          </div>
 
           <p class="form-status" id="obStatus" role="status" aria-live="polite"></p>
-
-          <div class="ob-nav">
-            <button type="button" class="ghost" id="obBack" hidden>Back</button>
-            <button type="button" class="pill" id="obNext">Continue</button>
-            <button type="submit" class="pill" id="obSubmit" hidden>Send to Luminary</button>
-          </div>
+          <div class="ob-nav"><button type="submit" class="pill" id="obSubmit">Send to Luminary</button></div>
         </form>
 
         <div class="ob-done" id="obDone" hidden tabindex="-1">

@@ -426,3 +426,4 @@ main{position:relative;z-index:1}
 }
 .page-onboarding [hidden]{display:none !important}
 .ob-form legend{margin-bottom:18px}
+.ob-form .ob-panel{display:grid;gap:34px;min-width:0}
