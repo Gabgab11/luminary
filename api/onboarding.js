@@ -48,8 +48,8 @@ function teamEmail(d){
     return body ? `<tr><td style="padding:22px 36px 0;"><div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#c98a2e;margin-bottom:6px;">${title}</div>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #ece6d9;">${body}</table></td></tr>` : "";
   }).join("");
-  return shell(`<tr><td style="padding:32px 36px 4px;"><div style="font-size:26px;line-height:1.2;font-family:'Arial Narrow',Arial,sans-serif;">New client brief: ${esc(d.business)}</div>
-  <p style="font-size:15px;color:#55524a;margin:10px 0 0;">${esc(d.name)} filled in the onboarding form. Hit reply to answer them directly.</p></td></tr>${sections}<tr><td style="height:28px"></td></tr>`);
+  return shell(`<tr><td style="padding:32px 36px 4px;"><div style="font-size:26px;line-height:1.2;font-family:'Arial Narrow',Arial,sans-serif;">New client onboarded: ${esc(d.business)}</div>
+  <p style="font-size:15px;color:#55524a;margin:10px 0 0;">${esc(d.name)} just completed onboarding. Their details are below. Hit reply to answer them directly.</p></td></tr>${sections}<tr><td style="height:28px"></td></tr>`);
 }
 
 function welcomeEmail(d){
@@ -97,7 +97,7 @@ module.exports = async function handler(req, res){
       from: TEAM_FROM,
       to: TEAM_TO,
       reply_to: d.email,
-      subject: `New client brief: ${d.business} (${d.name})`,
+      subject: `New client onboarded: ${d.business} (${d.name})`,
       html: teamEmail(d),
     });
   } catch (err){
