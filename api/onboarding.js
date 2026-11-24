@@ -8,10 +8,8 @@ const WELCOME_FROM = process.env.WELCOME_FROM || "Marfee at Luminary <marfee@lum
 const WELCOME_REPLY_TO = "marfee@luminarydigitalgroup.com";
 
 const FIELDS = [
-  ["You", [["name", "Name"], ["role", "Role"], ["email", "Email"], ["phone", "Phone / WhatsApp"], ["business", "Business"], ["website", "Website"], ["location", "Based in"]]],
-  ["Project", [["services", "Services"], ["about", "About the business"], ["goals", "Goals"]]],
-  ["Brand", [["audience", "Ideal customer"], ["assets", "Brand assets"], ["feel", "Should feel"], ["inspiration", "Inspiration / competitors"]]],
-  ["Scope", [["budget", "Budget"], ["timeline", "Launch"], ["deadline", "Hard deadline"], ["source", "Heard about us via"], ["notes", "Anything else"]]],
+  ["Client", [["name", "Name"], ["business", "Business"], ["email", "Email"], ["phone", "Phone / WhatsApp"], ["website", "Website / Instagram"]]],
+  ["Project", [["services", "Needs"], ["budget", "Budget"], ["timeline", "Launch"], ["about", "About the project"]]],
 ];
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -84,7 +82,10 @@ module.exports = async function handler(req, res){
   body = body || {};
 
   // honeypot: bots fill hidden fields; pretend success
-  if (body.company_url) return res.status(200).json({ ok: true });
+  if (body.ob_trap_x9){
+    console.warn("onboarding: spam trap filled, not sending", { email: String(body.email || "").slice(0, 80) });
+    return res.status(200).json({ ok: true });
+  }
 
   const d = {};
   FIELDS.forEach(([, rows]) => rows.forEach(([k]) => { d[k] = clean(body[k]); }));
@@ -116,5 +117,5 @@ module.exports = async function handler(req, res){
     console.error("welcome email failed", err); // the brief still arrived, so don't fail the client
   }
 
-  return res.status(200).json({ ok: true });
+  return res.status(200).json({ ok: true, sent: true });
 };
