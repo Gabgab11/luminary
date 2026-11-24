@@ -380,3 +380,49 @@ main{position:relative;z-index:1}
 .founder-hero h1{white-space:normal;font-size:clamp(64px, calc(128 * var(--u)), 150px)}
 .founder-hero h1 .h1-line{display:block;white-space:nowrap}
 @media (max-width:900px){.founder-hero h1{font-size:clamp(44px, 13vw, 100px)}}
+
+/* ---------- client onboarding ---------- */
+.ob-hero{min-height:64vh;min-height:64svh}
+.ob{max-width:860px}
+.ob-steps{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.ob-steps li{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream-faint);transition:color .4s var(--ease)}
+.ob-steps li span{display:block;font-family:var(--display);font-size:clamp(28px,3.4vw,44px);letter-spacing:0;line-height:1;margin-bottom:6px}
+.ob-steps li.is-current{color:var(--cream)}
+.ob-steps li.is-current span{color:var(--lantern)}
+.ob-steps li.is-done{color:var(--cream-dim)}
+.ob-bar{height:1px;background:var(--line);margin-bottom:clamp(40px,6vw,72px);overflow:hidden}
+.ob-bar i{display:block;height:100%;width:25%;background:var(--lantern);box-shadow:0 0 18px var(--lantern);transition:width .6s var(--ease)}
+.ob-form fieldset{border:0;display:grid;gap:30px;min-width:0}
+.ob-form legend{padding:0;margin-bottom:8px}
+.ob-form legend h2{font-size:clamp(36px,4.6vw,64px);line-height:1}
+.ob-panel.is-active{animation:obIn .6s var(--ease)}
+@keyframes obIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.ob-q{display:block;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cream-dim);margin-bottom:14px}
+.ob-chips{display:flex;flex-wrap:wrap;gap:10px}
+.ob-chips label{position:relative;cursor:pointer;margin:0;font-size:inherit;letter-spacing:normal;text-transform:none;color:inherit}
+.ob-chips input{position:absolute;opacity:0;width:1px;height:1px}
+.ob-chips span{display:inline-block;border:1px solid rgba(245,239,226,.3);border-radius:99px;padding:11px 18px;font-size:14px;color:var(--cream-dim);transition:all .25s var(--ease)}
+.ob-chips label:hover span{border-color:var(--cream);color:var(--cream)}
+.ob-chips input:checked + span{background:var(--lantern);border-color:var(--lantern);color:var(--on-cream);box-shadow:0 0 28px rgba(240,183,101,.35)}
+.ob-chips input:focus-visible + span{outline:2px solid var(--lantern);outline-offset:3px}
+.ob-form .is-invalid input:not([type=checkbox]):not([type=radio]),.ob-form input.is-invalid,.ob-form textarea.is-invalid{border-bottom-color:#e8846b}
+.ob-chips.is-invalid span{border-color:#e8846b}
+.ob-form input::placeholder,.ob-form textarea::placeholder{color:var(--cream-faint)}
+.ob-form input[type=date]{color-scheme:dark}
+.ob-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ob-nav{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.ob-nav .pill{border:0;cursor:pointer}
+.ob-nav .pill:disabled{opacity:.6;cursor:progress}
+.ob-nav .ghost{cursor:pointer;background:transparent;color:var(--cream)}
+.ob-nav .ghost:hover{background:var(--cream);color:var(--on-cream)}
+.ob-form .form-status{color:#f0b38f}
+.ob-done{padding:clamp(20px,4vw,40px) 0;animation:obIn .8s var(--ease)}
+.ob-done h2{font-size:clamp(40px,5.4vw,76px);line-height:1}
+.ob-done .ghost{margin-top:36px}
+.ob-done:focus{outline:none}
+@media (max-width:760px){
+  .ob-steps li{font-size:10px;letter-spacing:.14em}
+  .ob-chips span{padding:10px 15px;font-size:13.5px}
+}
+.page-onboarding [hidden]{display:none !important}
+.ob-form legend{margin-bottom:18px}
